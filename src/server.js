@@ -9,10 +9,10 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // On Request Function
 const onRequest = (request, response) => {
-    console.log(request.url);
-    htmlHandler.getHTML(request, response);
+  console.log(request.url);
+  htmlHandler.getHTML(request, response);
 };
 
 http.createServer(onRequest).listen(port, () => {
-    console.log(`Listening on 127.0.0.1:${port}`);
+  console.log(`Listening on 127.0.0.1:${port}`);
 });

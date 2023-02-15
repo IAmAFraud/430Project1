@@ -5,6 +5,21 @@
         <!--Add CSS Here-->
 
         <!--Add Script for Handeling Response Here-->
+        <script>
+            const init = () => {
+                const loginForm = document.querySelector("#loginForm");
+
+                const login = (e) => {
+                    e.preventDefault();
+                    console.log(document.querySelector("#nameField").value);
+                    return false;
+                }
+
+                loginForm.addEventListener('submit', login);
+            }
+
+            window.onload = init;
+        </script>
     </head>
     <body>
         <header id="header">
@@ -15,6 +30,13 @@
                 the tabletop game X-Wing by Fantasy 
                 Flight Games.
             </p>
+        </section>
+        <section id="login">
+            <form id="loginForm" action="/getUser" method="get">
+                <label for="name">Name: </label>
+                <input id="nameField" type="text" name="name" />
+                <input type="submit" value="Login" />
+            </form>
         </section>
     </body>
 </html>
