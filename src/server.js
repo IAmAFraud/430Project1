@@ -10,7 +10,12 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // On Request Function
 const onRequest = (request, response) => {
   console.log(request.url);
-  htmlHandler.getHTML(request, response);
+  if (request.url === '/bundle.js'){
+    htmlHandler.getJS(request, response);
+  }
+  else{
+    htmlHandler.getHTML(request, response); 
+  }
 };
 
 http.createServer(onRequest).listen(port, () => {
