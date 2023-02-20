@@ -2,11 +2,13 @@
 const path = require('path');
 
 module.exports = {
-    entry: './client/homepageClient.js',
+    entry: {
+        homepage: './client/homepageClient.js',
+    },
     mode: 'development',
     output: {
         path: path.resolve(__dirname, 'hosted'),
-        filename: 'bundle.js',
+        filename: '[name]Bundle.js',
     },
     watchOptions: {
         aggregateTimeout: 200,
