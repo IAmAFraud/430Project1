@@ -22,7 +22,7 @@ const userData = require('./jsonBuilder.js');
 
 // Response Function
 const respond = (request, response, status, content) => {
-    response.writeHead(200, {'Content-Type': 'application/json'})
+    response.writeHead(status, {'Content-Type': 'application/json'})
     response.write(JSON.stringify(content));
     response.end();
 }
@@ -32,17 +32,24 @@ const getUser = (request, response, body) => {
     let responseJSON = {};
 
     // Need to check incoming body data
+    if (!body.name) {
+        responseJSON.message = 'Name value is required';
+        responseJSON.id = 'addMissingParam';
+        return respond(request, response, 400, responseJSON);
+    }
 
     // If it exists, simply return the data
-    if (userData[body.name]){
-        responseJSON = userData[body.name];
+    if (userData.data[body.name]){
+        responseJSON.message = "Sucessfully got user";
+        responseJSON.content = userData.data[body.name];
         return respond(request, response, 200, responseJSON);
     }
 
     // If it doesn't exist, create the user
-
-
-    respond(request, response, 200, userData.data);
+    userData.data[body.name] = {};
+    responseJSON.message = "Successfully created user";
+    responseJSON.content = userData.data[body.name];
+    respond(request, response, 201, responseJSON);
 };
 
 

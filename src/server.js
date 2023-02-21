@@ -1,5 +1,6 @@
 // Requires
 const http = require('http');
+const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
@@ -9,6 +10,8 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // Structs for GET, HEAD, and POST requests
 const getStruct = {
   '/': htmlHandler.getHTML,
+  '/homepageStyle.css': htmlHandler.getCSS,
+  '/homepageBundle.js': htmlHandler.getJS,
   '/getUser': jsonHandler.getUser,
 }
 
@@ -38,13 +41,15 @@ const parseBody = (request, response, handlerFunction) => {
 // On Request Function
 const onRequest = (request, response) => {
   console.log(request.url);
-  if (request.url === '/bundle.js'){
+  if (request.url === '/homepageBundle.js'){
     htmlHandler.getJS(request, response);
+  } else if (request.url === '/homepageStyle.css'){
+    htmlHandler.getCSS(request, response);
   } else if (request.url === '/'){
     htmlHandler.getHTML(request, response); 
   } else if (request.url === '/getUser'){
     parseBody(request, response, jsonHandler.getUser);
-  }
+  } 
 
 };
 

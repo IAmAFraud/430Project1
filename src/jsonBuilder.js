@@ -21,7 +21,22 @@
 
 // const filtered = data.filter(x => x.faction === 'Rebel Alliance')
 
-const data = {};
+const data = {
+    'Sample': {
+        'Sample Squadron': {
+            name: 'Sample Squadron',
+            points: 50,
+            faction: 'Rebel Alliance',
+            ships: {}
+        },
+        'Empire\'s Elite': {
+            name: 'Empire\'s Elite',
+            points: 100,
+            faction: 'Galactic Empire',
+            ships: {}
+        }
+    }
+};
 
 
 module.exports ={
