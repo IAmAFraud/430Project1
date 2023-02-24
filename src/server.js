@@ -1,5 +1,6 @@
 // Requires
 const http = require('http');
+const url = require('url');
 const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
@@ -13,6 +14,8 @@ const getStruct = {
   '/homepageStyle.css': htmlHandler.getCSS,
   '/homepageBundle.js': htmlHandler.getJS,
   '/editSquadron': htmlHandler.getEditorHTML,
+  '/getSquadronInfo': jsonHandler.getSquadronInfo,
+  notFound: htmlHandler.getHomepageHTML,
 }
 
 const postStruct = {
@@ -43,23 +46,45 @@ const parseBody = (request, response, handlerFunction) => {
 };
 
 
+// Handles Get Requests
+const handleGet = (request, response, parsedUrl) => {
+  const func = getStruct[parsedUrl.pathname];
+  const params = query.parse(parsedUrl.query);
+
+  if (func) {
+      func(request, response, params);
+  } else {
+    getStruct.notFound(request, response);
+  }
+};
+
+// Handles Post Requests
+const handlePost = (request, response, parsedUrl) => {
+  const func = postStruct[parsedUrl.pathname];
+
+  if (func) {
+    parseBody(request, response, func);
+  } else {
+    getStruct.notFound(request, response);
+  }
+};
+
 // On Request Function
 const onRequest = (request, response) => {
-  console.log(request.url);
-  if (request.url === '/homepageBundle.js'){
-    htmlHandler.getJS(request, response);
-  } else if (request.url === '/homepageStyle.css'){
-    htmlHandler.getCSS(request, response);
-  } else if (request.url === '/'){
-    htmlHandler.getHomepageHTML(request, response); 
-  } else if (request.url === '/getUser'){
-    parseBody(request, response, jsonHandler.getUser);
-  } else if (request.url === '/createSquadron') {
-    parseBody(request, response, jsonHandler.createSquadron);
-  } else if (request.url === '/editSquadron') {
-    htmlHandler.getEditorHTML(request, response);
-  }
+  const parsedUrl = url.parse(request.url);
 
+  switch (request.method){
+    case 'HEAD':
+      break;
+
+    case 'GET':
+      handleGet(request, response, parsedUrl)
+      break;
+
+    case 'POST':
+      handlePost(request, response, parsedUrl);
+      break;
+  }
 };
 
 http.createServer(onRequest).listen(port, () => {

@@ -1,12 +1,12 @@
 // Handles a response from the server
-const handleResponse = async (response, method, form) => {
+const handleResponse = async (response, method, user) => {
     const content = document.querySelector('#content');
     const message = document.querySelector('#messages');
     const status = response.status;
 
     switch (status){
         case 200:
-            message.innerHTML = '<h1>Welcome Back</h1>';
+            message.innerHTML = '<h1>Success</h1>';
             break;
 
         case 201:
@@ -14,8 +14,8 @@ const handleResponse = async (response, method, form) => {
             break;
 
         case 400:
-            message.innerHTML = '<h1>Bad Request: Please Input a Name<h1>';
-            return;
+            message.innerHTML = '<h1>Bad Request: Check Console<h1>';
+            break;
 
         case 404:
             message.innerHTML = '<h1>Content Not Found</h1>';
@@ -26,10 +26,16 @@ const handleResponse = async (response, method, form) => {
             break;
     }
 
+    // Gets the JSON response
+    const resJSON = await response.json();
+
+    if (status === 400) {
+        console.log(resJSON['message']);
+    }
+
     if (status === 200 || status === 201){
-        // Gets the JSON response
-        const resJSON = await response.json();
-        console.log(resJSON);
+        // Clears the content section of the file
+        content.innerHTML = '';
 
         // Removes the login System, shows the Squadron Creator System
         document.querySelector('#login').style.display = 'none';
@@ -54,18 +60,8 @@ const handleResponse = async (response, method, form) => {
             btn.textContent = 'Edit Squadron';
             btn.addEventListener('click', async () => {
                 try{
-                    /*
-                    const options = {
-                        method: 'get',
-                        headers: {
-                            'accept': 'text/html',
-                        }
-                    };
-        
-                    const response = await fetch('/editSquadron', options);
-                    handleResponse(response, 'text/html');
-                    */
-                   window.location.href = `/editSquadron`;
+                    // Need to figure out how to pass username and squadron name to the next page
+                    window.location.href = `/editSquadron?user=${user}&name=${name.textContent}`;
                 } catch (err) {
                     console.log(err);
                 }
@@ -97,7 +93,7 @@ const getUser = async (loginForm) => {
         body: formData,
     });
 
-    handleResponse(response, method, loginForm);
+    handleResponse(response, method, name);
 };
 
 
@@ -120,7 +116,7 @@ const createSquadron = async (squadronForm, loginForm) => {
         body: formData,
     });
 
-    handleResponse(response, method, loginForm);
+    handleResponse(response, method, userName);
 };
 
 // Init Function

@@ -5,6 +5,25 @@
         <!--Add CSS Here-->
 
         <!--Add Script for Handeling Response Here-->
+        <script>
+            const init = async () => {
+                console.log(window.location.search);
+
+                const response = await fetch ('/getSquadronInfo' + window.location.search, {
+                    method: 'get',
+                    headers: {
+                        'content-type': 'application/x-www-form-urlencoded',
+                        'accept': 'application/json',
+                    },
+                });
+
+                const resJSON = await response.json();
+                document.querySelector('#squadronName').textContent += resJSON['content']['name'];
+                document.querySelector('#stats').textContent = `Points: 0/${resJSON['content']['points']}     Faction: ${resJSON['content']['faction']}`;
+            };
+
+            window.onload = init;
+        </script>
     </head>
     <body>
         <header>
@@ -14,7 +33,10 @@
             <h2 id="squadronName">Name: </h2>
             <p id="stats">Points: /    Faction:</p>
         </section>
-        <section id="squadron"></section>
+        <section id="squadron">
+            <!--Need to learn how to return generic things from a url, like this image-->
+            <img src="../node_modules/xwing-data/images/pilots/Rebel Alliance/X-wing/rookie-pilot.png" />
+        </section>
         <section id="pilots"></section>
     </body>
 </html>

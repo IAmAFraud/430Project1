@@ -66,7 +66,11 @@ const createSquadron = (request, response, body) => {
     }
 
     // Need to prevent overwriting data
-    console.log(userData.data[body.userName])
+    if (userData.data[body.userName][body.name]){
+        responseJSON.message = 'Name already exists, please change the name';
+        responseJSON.id = 'nameAlreadyExists';
+        return respond(request, response, 400, responseJSON);
+    }
 
     // Creates the data for a blank squadron
     userData.createSquadronData(body.userName, body.name, body.points, body.faction);
@@ -77,8 +81,25 @@ const createSquadron = (request, response, body) => {
     respond(request, response, 201, responseJSON);
 }
 
+// Get Squadron Info Response
+const getSquadronInfo = (request, response, params) => {
+    const responseJSON = {};
+
+    // If missing parameters, back out
+    if (!params.user || !params.name){
+        responseJSON.message = 'Needs a user and name parameter';
+        responseJSON.id = 'addMissingParams';
+        return respond(request, response, 400, responseJSON);
+    }
+
+    responseJSON.message = 'Successfully Loaded In Squadron';
+    responseJSON.content = userData.data[params.user][params.name];
+    return respond(request, response, 200, responseJSON);
+}
+
 
 module.exports = {
     getUser,
     createSquadron,
+    getSquadronInfo,
 };
