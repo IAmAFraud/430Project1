@@ -3,13 +3,21 @@ const fs = require('fs');
 
 // HTML files to be loaded in
 const homepage = fs.readFileSync(`${__dirname}/../hosted/homepage.html`);
+const editor = fs.readFileSync(`${__dirname}/../hosted/editor.html`);
 const style = fs.readFileSync(`${__dirname}/../hosted/homepageStyle.css`);
 const js = fs.readFileSync(`${__dirname}/../hosted/homepageBundle.js`);
 
 // Get HTML function
-const getHTML = (request, response) => {
+const getHomepageHTML = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
   response.write(homepage);
+  response.end();
+};
+
+// Get Editor Function
+const getEditorHTML = (request, response) => {
+  response.writeHead(200, {'Content-Type': 'text/html'});
+  response.write(editor);
   response.end();
 };
 
@@ -29,7 +37,8 @@ const getJS = (request, response) => {
 
 // Exports
 module.exports = {
-  getHTML,
+  getHomepageHTML,
+  getEditorHTML,
   getCSS,
   getJS,
 };

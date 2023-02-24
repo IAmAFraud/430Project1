@@ -1,27 +1,28 @@
 // Handles a response from the server
 const handleResponse = async (response, method, form) => {
-    const htmlContent = document.querySelector('#content');
+    const content = document.querySelector('#content');
+    const message = document.querySelector('#messages');
     const status = response.status;
 
     switch (status){
         case 200:
-            htmlContent.innerHTML = '<h1>Welcome Back</h1>';
+            message.innerHTML = '<h1>Welcome Back</h1>';
             break;
 
         case 201:
-            htmlContent.innerHTML = '<h1>Created User</h1>';
+            message.innerHTML = '<h1>Created</h1>';
             break;
 
         case 400:
-            htmlContent.innerHTML = '<h1>Bad Request: Please Input a Name<h1>';
-            break;
-
-        case 404:
-            htmlContent.innerHTML = '<h1>Content Not Found';
+            message.innerHTML = '<h1>Bad Request: Please Input a Name<h1>';
             return;
 
+        case 404:
+            message.innerHTML = '<h1>Content Not Found</h1>';
+            break;
+
         default:
-            htmlContent.innerHTML = '<h1>Status Code Not Implemented</h1>';
+            message.innerHTML = '<h1>Status Code Not Implemented</h1>';
             break;
     }
 
@@ -43,14 +44,37 @@ const handleResponse = async (response, method, form) => {
             const name = document.createElement('h2');
             const points = document.createElement('p');
             const faction = document.createElement('p');
+            const btn = document.createElement('button');
 
             name.textContent = `${resJSON['content'][x]['name']}`;
+            //activeUser = name.textContent;
             points.textContent = `Points Max: ${resJSON['content'][x]['points']}`;
             faction.textContent = `Faction: ${resJSON['content'][x]['faction']}`;
+
+            btn.textContent = 'Edit Squadron';
+            btn.addEventListener('click', async () => {
+                try{
+                    /*
+                    const options = {
+                        method: 'get',
+                        headers: {
+                            'accept': 'text/html',
+                        }
+                    };
+        
+                    const response = await fetch('/editSquadron', options);
+                    handleResponse(response, 'text/html');
+                    */
+                   window.location.href = `/editSquadron`;
+                } catch (err) {
+                    console.log(err);
+                }
+            });
 
             div.appendChild(name);
             div.appendChild(points);
             div.appendChild(faction);
+            div.appendChild(btn);
 
             content.appendChild(div);
         }
@@ -73,22 +97,51 @@ const getUser = async (loginForm) => {
         body: formData,
     });
 
-    handleResponse(response, method);
+    handleResponse(response, method, loginForm);
 };
 
+
+// Function to Create a Squadron
+const createSquadron = async (squadronForm, loginForm) => {
+    const method = squadronForm.getAttribute('method');
+    const userName = loginForm.querySelector('#userNameField').value;
+    const name = squadronForm.querySelector('#squadronNameField').value;
+    const faction = squadronForm.querySelector('#factionSelect').value;
+    const points = squadronForm.querySelector('#pointsLimit').value;
+
+    const formData = `userName=${userName}&name=${name}&faction=${faction}&points=${points}`;
+
+    const response = await fetch('/createSquadron', {
+        method: method,
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'accept': 'application/json',
+        },
+        body: formData,
+    });
+
+    handleResponse(response, method, loginForm);
+};
 
 // Init Function
 const init = () => {
     const loginForm = document.querySelector('#loginForm');
-    const createButton = document.querySelector('#createBtn');
+    const squadronForm = document.querySelector('#squadronForm');
 
     const login = (e) => {
         e.preventDefault();
         getUser(loginForm);
         return false;
-    }
+    };
+
+    const create = (e) => {
+        e.preventDefault();
+        createSquadron(squadronForm, loginForm);
+        return false;
+    };
 
     loginForm.addEventListener('submit', login);
+    squadronForm.addEventListener('submit', create);
 };
 
 window.onload = init;

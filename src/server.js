@@ -9,10 +9,15 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 // Structs for GET, HEAD, and POST requests
 const getStruct = {
-  '/': htmlHandler.getHTML,
+  '/': htmlHandler.getHomepageHTML,
   '/homepageStyle.css': htmlHandler.getCSS,
   '/homepageBundle.js': htmlHandler.getJS,
-  '/getUser': jsonHandler.getUser,
+  '/editSquadron': htmlHandler.getEditorHTML,
+}
+
+const postStruct = {
+    '/getUser': jsonHandler.getUser,
+    '/createSquadron': jsonHandler.createSquadron,
 }
 
 // Parse Body Function
@@ -46,10 +51,14 @@ const onRequest = (request, response) => {
   } else if (request.url === '/homepageStyle.css'){
     htmlHandler.getCSS(request, response);
   } else if (request.url === '/'){
-    htmlHandler.getHTML(request, response); 
+    htmlHandler.getHomepageHTML(request, response); 
   } else if (request.url === '/getUser'){
     parseBody(request, response, jsonHandler.getUser);
-  } 
+  } else if (request.url === '/createSquadron') {
+    parseBody(request, response, jsonHandler.createSquadron);
+  } else if (request.url === '/editSquadron') {
+    htmlHandler.getEditorHTML(request, response);
+  }
 
 };
 
