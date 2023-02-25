@@ -5,7 +5,8 @@ const fs = require('fs');
 const homepage = fs.readFileSync(`${__dirname}/../hosted/homepage.html`);
 const editor = fs.readFileSync(`${__dirname}/../hosted/editor.html`);
 const style = fs.readFileSync(`${__dirname}/../hosted/homepageStyle.css`);
-const js = fs.readFileSync(`${__dirname}/../hosted/homepageBundle.js`);
+const homepageJS = fs.readFileSync(`${__dirname}/../hosted/homepageBundle.js`);
+const editorJS = fs.readFileSync(`${__dirname}/../hosted/editorBundle.js`);
 
 // Get HTML function
 const getHomepageHTML = (request, response) => {
@@ -28,17 +29,25 @@ const getCSS = (request, response) => {
   response.end();
 };
 
-// Get JS File
-const getJS = (request, response) => {
+// Get Homepage JS File
+const getHomepageJS = (request, response) => {
     response.writeHead(200, { 'Content-Type': 'application/javascript' });
-    response.write(js);
+    response.write(homepageJS);
     response.end();
   };
+
+  // Get Editor JS File
+const getEditorJS = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'application/javascript' });
+  response.write(editorJS);
+  response.end();
+};
 
 // Exports
 module.exports = {
   getHomepageHTML,
   getEditorHTML,
   getCSS,
-  getJS,
+  getHomepageJS,
+  getEditorJS,
 };

@@ -18,6 +18,9 @@
 }
 */
 
+// Requires the pilots data
+const fs = require('fs');
+let pilotData = JSON.parse(fs.readFileSync(`${__dirname}/../node_modules/xwing-data/data/pilots.js`));
 
 // const filtered = data.filter(x => x.faction === 'Rebel Alliance')
 
@@ -39,6 +42,8 @@ const data = {
     }
 };
 
+let factionData;
+
 // Function for creating a new user
 const createNewUserData = (name) => {
     data[name] = {};
@@ -53,9 +58,16 @@ const createSquadronData = (userName, name, points, faction) => {
     data[userName][name]['ships'] = {};
 };
 
+// Gets a factions set of pilots
+const getFactionData = (faction) => {
+    const filtered = pilotData.filter(x => x.faction === faction)
+    return filtered;
+}
+
 
 module.exports ={
     data,
     createNewUserData,
     createSquadronData,
+    getFactionData,
 }

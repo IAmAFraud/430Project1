@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = {
     entry: {
         homepage: './client/homepageClient.js',
+        editor: './client/editorClient.js',
     },
     mode: 'development',
     output: {

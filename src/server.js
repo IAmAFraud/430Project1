@@ -12,9 +12,11 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 const getStruct = {
   '/': htmlHandler.getHomepageHTML,
   '/homepageStyle.css': htmlHandler.getCSS,
-  '/homepageBundle.js': htmlHandler.getJS,
+  '/homepageBundle.js': htmlHandler.getHomepageJS,
   '/editSquadron': htmlHandler.getEditorHTML,
+  '/editorBundle.js': htmlHandler.getEditorJS,
   '/getSquadronInfo': jsonHandler.getSquadronInfo,
+  '/getFactionData': jsonHandler.getPilotInfo,
   notFound: htmlHandler.getHomepageHTML,
 }
 

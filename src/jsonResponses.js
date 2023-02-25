@@ -79,7 +79,7 @@ const createSquadron = (request, response, body) => {
     responseJSON.message = 'Successfully created squadron';
     responseJSON.content = userData.data[body.userName];
     respond(request, response, 201, responseJSON);
-}
+};
 
 // Get Squadron Info Response
 const getSquadronInfo = (request, response, params) => {
@@ -92,14 +92,45 @@ const getSquadronInfo = (request, response, params) => {
         return respond(request, response, 400, responseJSON);
     }
 
+    // If invalid user or squadron name, back out
+    if (!userData.data[params.user] || !userData.data[params.user][params.name]){
+        responseJSON.message = 'Invalid User or Squadron. Content does not exist';
+        responseJSON.id = 'squadronNotFound';
+        return respond(request, response, 404, responseJSON);
+    }
+
     responseJSON.message = 'Successfully Loaded In Squadron';
     responseJSON.content = userData.data[params.user][params.name];
     return respond(request, response, 200, responseJSON);
-}
+};
+
+const getPilotInfo = (request, response, params) => {
+    const responseJSON = {};
+    if (!params.faction){
+        responseJSON.message = 'Need a faction parameter';
+        responseJSON.id = 'missingFactionParam';
+        return respond(request, response, 400, responseJSON);
+    }
+
+    /*
+    console.log(params.faction);
+    if (params.faction !== 'Rebel Alliance' || params.faction !== 'Galactic Empire' || params.faction !== 'Scum and Villainy') {
+        responseJSON.message = 'Faction parameters is not correct';
+        responseJSON.id = 'invalidFactionParam';
+        return respond(request, response, 400, responseJSON);
+    }
+    */
+
+    data = userData.getFactionData(params.faction);
+    responseJSON.message = 'Sucessfully got faction data';
+    responseJSON.content = data;
+    return respond(request, response, 200, responseJSON);
+};
 
 
 module.exports = {
     getUser,
     createSquadron,
     getSquadronInfo,
+    getPilotInfo
 };
