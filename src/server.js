@@ -18,12 +18,12 @@ const getStruct = {
   '/getSquadronInfo': jsonHandler.getSquadronInfo,
   '/getFactionData': jsonHandler.getPilotInfo,
   notFound: htmlHandler.getHomepageHTML,
-}
+};
 
 const postStruct = {
-    '/getUser': jsonHandler.getUser,
-    '/createSquadron': jsonHandler.createSquadron,
-}
+  '/getUser': jsonHandler.getUser,
+  '/createSquadron': jsonHandler.createSquadron,
+};
 
 // Parse Body Function
 const parseBody = (request, response, handlerFunction) => {
@@ -47,14 +47,13 @@ const parseBody = (request, response, handlerFunction) => {
   });
 };
 
-
 // Handles Get Requests
 const handleGet = (request, response, parsedUrl) => {
   const func = getStruct[parsedUrl.pathname];
   const params = query.parse(parsedUrl.query);
 
   if (func) {
-      func(request, response, params);
+    func(request, response, params);
   } else {
     getStruct.notFound(request, response);
   }
@@ -75,16 +74,19 @@ const handlePost = (request, response, parsedUrl) => {
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
 
-  switch (request.method){
+  switch (request.method) {
     case 'HEAD':
       break;
 
     case 'GET':
-      handleGet(request, response, parsedUrl)
+      handleGet(request, response, parsedUrl);
       break;
 
     case 'POST':
       handlePost(request, response, parsedUrl);
+      break;
+
+    default:
       break;
   }
 };

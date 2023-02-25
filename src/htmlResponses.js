@@ -17,7 +17,7 @@ const getHomepageHTML = (request, response) => {
 
 // Get Editor Function
 const getEditorHTML = (request, response) => {
-  response.writeHead(200, {'Content-Type': 'text/html'});
+  response.writeHead(200, { 'Content-Type': 'text/html' });
   response.write(editor);
   response.end();
 };
@@ -31,12 +31,12 @@ const getCSS = (request, response) => {
 
 // Get Homepage JS File
 const getHomepageJS = (request, response) => {
-    response.writeHead(200, { 'Content-Type': 'application/javascript' });
-    response.write(homepageJS);
-    response.end();
-  };
+  response.writeHead(200, { 'Content-Type': 'application/javascript' });
+  response.write(homepageJS);
+  response.end();
+};
 
-  // Get Editor JS File
+// Get Editor JS File
 const getEditorJS = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'application/javascript' });
   response.write(editorJS);

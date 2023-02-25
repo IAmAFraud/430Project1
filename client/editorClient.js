@@ -1,6 +1,6 @@
 // Faction Ship Types
-const rebelShips = ['A-Wing', 'ARC-170', 'Attack Shuttle', 'B-Wing', 'CR90 Corvette', 'E-Wing', 'GR-75 Medium Transport',
-    'HWK-290', 'K-Wing', 'Scurrg H-6 Bomber', 'T-70 X-Wing', 'TIE Fighter', 'U-Wing', 'VCX-100', 'X-Wing', 'Y-Wing',
+const rebelShips = ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
+    'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
     'YT-1300', 'YT-2400', 'Z-95 Headhunter'];
 
 const handleResponse = async (response, key) => {
@@ -28,6 +28,18 @@ const handleResponse = async (response, key) => {
             document.querySelector('#squadronName').textContent += resJSON['content']['name'];
             document.querySelector('#stats').textContent = `Points: 0/${resJSON['content']['points']}     Faction: ${resJSON['content']['faction']}`;
 
+            // Creates Tabs for Ships
+            const pilots = document.querySelector('#pilots');
+            pilots.innerHTML = "";
+            for (let ship in rebelShips){
+                const div = document.createElement('div');
+                div.textContent = rebelShips[ship];
+                div.id = rebelShips[ship].replace(/ /g, '-');
+                div.addEventListener('click', () => {                
+                });
+                pilots.appendChild(div);
+            }
+
             // Loads in the faction's pilots if the squadron is loaded in
             const pilotResponse = await fetch (`/getFactionData?faction=${resJSON['content']['faction']}`, {
                 method: 'get',
@@ -36,19 +48,23 @@ const handleResponse = async (response, key) => {
                 },
             });
 
-            // Creates Tabs for Ships
-            const pilots = document.querySelector('#pilots');
-            pilots.innerHTML = "";
-            for (let ship in rebelShips){
-                const div = document.createElement('div');
-                div.textContent = rebelShips[ship];
-                pilots.appendChild(div);
-            }
-
             handleResponse(pilotResponse, 'pilots');
         } else if (key === 'pilots'){
             console.log(resJSON['content']);
 
+            for (let ship in rebelShips){
+                const filtered = resJSON['content'].filter(x => x.ship === rebelShips[ship]);
+                console.log(filtered);
+
+                let tab = document.querySelector(`#${rebelShips[ship].replace(/ /g, '-')}`);
+                console.log(tab.id);
+                for (let pilot in filtered){
+                    let div = document.createElement('div');
+                    div.id = filtered[pilot]['name'];
+                    div.innerHTML = `<p>Pilot: ${filtered[pilot]['name']}  Points: ${filtered[pilot]['points']}</p>`;
+                    tab.appendChild(div);
+                }
+            }
 
         }
     } else if (status === 400) {
