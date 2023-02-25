@@ -1,87 +1,88 @@
 // Faction Ship Types
 const rebelShips = ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
-    'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
-    'YT-1300', 'YT-2400', 'Z-95 Headhunter'];
+  'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
+  'YT-1300', 'YT-2400', 'Z-95 Headhunter'];
 
 const handleResponse = async (response, key) => {
-    const status = response.status;
-    switch (status){
-        case 200:
-            break;
+  const { status } = response;
+  switch (status) {
+    case 200:
+      break;
 
-        case 204:
-            return;
+    case 204:
+      return;
 
-        case 400:
-            break;
+    case 400:
+      break;
 
-        case 404:
-            break;
+    case 404:
+      break;
 
-        default:
-            break;
-    }
+    default:
+      break;
+  }
 
-    const resJSON = await response.json();
-    if (status === 200){
-        if (key === 'squadron'){
-            document.querySelector('#squadronName').textContent += resJSON['content']['name'];
-            document.querySelector('#stats').textContent = `Points: 0/${resJSON['content']['points']}     Faction: ${resJSON['content']['faction']}`;
+  const resJSON = await response.json();
+  if (status === 200) {
+    if (key === 'squadron') {
+      document.querySelector('#squadronName').textContent += resJSON.content.name;
+      document.querySelector('#stats').textContent = `Points: 0/${resJSON.content.points}     Faction: ${resJSON.content.faction}`;
 
-            // Creates Tabs for Ships
-            const pilots = document.querySelector('#pilots');
-            pilots.innerHTML = "";
-            for (let ship in rebelShips){
-                const div = document.createElement('div');
-                div.textContent = rebelShips[ship];
-                div.id = rebelShips[ship].replace(/ /g, '-');
-                div.addEventListener('click', () => {                
-                });
-                pilots.appendChild(div);
-            }
+      // Creates Tabs for Ships
+      const pilots = document.querySelector('#pilots');
+      pilots.innerHTML = '';
 
-            // Loads in the faction's pilots if the squadron is loaded in
-            const pilotResponse = await fetch (`/getFactionData?faction=${resJSON['content']['faction']}`, {
-                method: 'get',
-                headers: {
-                    'accept': 'application/json',
-                },
-            });
+      // Info on how to create for in loops
+      // https://www.microverse.org/blog/how-to-loop-through-the-array-of-json-objects-in-javascript
+      for (const ship in rebelShips) {
+        const div = document.createElement('div');
+        div.textContent = rebelShips[ship];
+        div.id = rebelShips[ship].replace(/ /g, '-');
+        div.addEventListener('click', () => {
+        });
+        pilots.appendChild(div);
+      }
 
-            handleResponse(pilotResponse, 'pilots');
-        } else if (key === 'pilots'){
-            console.log(resJSON['content']);
-
-            for (let ship in rebelShips){
-                const filtered = resJSON['content'].filter(x => x.ship === rebelShips[ship]);
-                console.log(filtered);
-
-                let tab = document.querySelector(`#${rebelShips[ship].replace(/ /g, '-')}`);
-                console.log(tab.id);
-                for (let pilot in filtered){
-                    let div = document.createElement('div');
-                    div.id = filtered[pilot]['name'];
-                    div.innerHTML = `<p>Pilot: ${filtered[pilot]['name']}  Points: ${filtered[pilot]['points']}</p>`;
-                    tab.appendChild(div);
-                }
-            }
-
-        }
-    } else if (status === 400) {
-        console.log(resJSON['message']);
-    }
-}
-
-
-const init = async () => {
-    const squadronResponse = await fetch ('/getSquadronInfo' + window.location.search, {
+      // Loads in the faction's pilots if the squadron is loaded in
+      const pilotResponse = await fetch(`/getFactionData?faction=${resJSON.content.faction}`, {
         method: 'get',
         headers: {
-            'content-type': 'application:x-www-form-urlencoded',
-            'accept': 'application/json',
+          accept: 'application/json',
         },
-    });
-    handleResponse(squadronResponse, 'squadron');
+      });
+
+      handleResponse(pilotResponse, 'pilots');
+    } else if (key === 'pilots') {
+      console.log(resJSON.content);
+
+      for (const ship in rebelShips) {
+        const filtered = resJSON.content.filter((x) => x.ship === rebelShips[ship]);
+
+        // Info on how to replace all spaces in a string
+        // https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
+        const tab = document.querySelector(`#${rebelShips[ship].replace(/ /g, '-')}`);
+        for (const pilot in filtered) {
+          const div = document.createElement('div');
+          div.id = filtered[pilot].name;
+          div.innerHTML = `<p>Pilot: ${filtered[pilot].name}  Points: ${filtered[pilot].points}</p>`;
+          tab.appendChild(div);
+        }
+      }
+    }
+  } else if (status === 400) {
+    console.log(resJSON.message);
+  }
+};
+
+const init = async () => {
+  const squadronResponse = await fetch(`/getSquadronInfo${window.location.search}`, {
+    method: 'get',
+    headers: {
+      'content-type': 'application:x-www-form-urlencoded',
+      accept: 'application/json',
+    },
+  });
+  handleResponse(squadronResponse, 'squadron');
 };
 
 window.onload = init;
