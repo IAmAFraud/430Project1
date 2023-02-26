@@ -102,6 +102,7 @@ const getSquadronInfo = (request, response, params) => {
   return respond(request, response, 200, responseJSON);
 };
 
+// Returns the info on all of a faction's pilots
 const getPilotInfo = (request, response, params) => {
   const responseJSON = {};
   if (!params.faction) {

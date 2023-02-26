@@ -59,7 +59,7 @@ const handleResponse = async (response, method, user) => {
       const btn = document.createElement('button');
 
       name.textContent = `${resJSON.content[x].name}`;
-      points.textContent = `Points Max: ${resJSON.content[x].points}`;
+      points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
       faction.textContent = `Faction: ${resJSON.content[x].faction}`;
 
       btn.textContent = 'Edit Squadron';

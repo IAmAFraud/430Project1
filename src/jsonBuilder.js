@@ -3,7 +3,8 @@
     'User': {
         'Squadron Name': {
             name: 'Squadron Name',
-            points: pointsMax,
+            currentPoints: curPoints,
+            maxPoinst: pointsMax,
             faction: 'Faction',
             ships: {
                 'Ship 1':{
@@ -30,13 +31,15 @@ const data = {
   Sample: {
     'Sample Squadron': {
       name: 'Sample Squadron',
-      points: 50,
+      currentPoints: 0,
+      maxPoints: 50,
       faction: 'Rebel Alliance',
       ships: {},
     },
     'Empire\'s Elite': {
       name: 'Empire\'s Elite',
-      points: 100,
+      currentPoints: 0,
+      maxPoints: 100,
       faction: 'Galactic Empire',
       ships: {},
     },
@@ -52,7 +55,8 @@ const createNewUserData = (name) => {
 const createSquadronData = (userName, name, points, faction) => {
   data[userName][name] = {};
   data[userName][name].name = name;
-  data[userName][name].points = points;
+  data[userName][name].currentPoints = 0;
+  data[userName][name].maxPoints = points;
   data[userName][name].faction = faction;
   data[userName][name].ships = {};
 };
