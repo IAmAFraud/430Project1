@@ -8,6 +8,8 @@ const style = fs.readFileSync(`${__dirname}/../hosted/homepageStyle.css`);
 const homepageJS = fs.readFileSync(`${__dirname}/../hosted/homepageBundle.js`);
 const editorJS = fs.readFileSync(`${__dirname}/../hosted/editorBundle.js`);
 
+const img = fs.readFileSync(`${__dirname}/../node_modules/xwing-data/images/pilots/Rebel Alliance/X-wing/wedge-antilles.png`);
+
 // Get HTML function
 const getHomepageHTML = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });

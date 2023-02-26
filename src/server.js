@@ -4,6 +4,7 @@ const url = require('url');
 const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
+const imgHandler = require('./imgResponses.js');
 
 // Creates the port
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
@@ -17,6 +18,7 @@ const getStruct = {
   '/editorBundle.js': htmlHandler.getEditorJS,
   '/getSquadronInfo': jsonHandler.getSquadronInfo,
   '/getFactionData': jsonHandler.getPilotInfo,
+  '/getImage': imgHandler.getImage,
   notFound: htmlHandler.getHomepageHTML,
 };
 

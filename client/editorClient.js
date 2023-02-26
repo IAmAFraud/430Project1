@@ -38,8 +38,8 @@ const handleResponse = async (response, key) => {
         const div = document.createElement('div');
         div.textContent = rebelShips[ship];
         div.id = rebelShips[ship].replace(/ /g, '-');
-        div.addEventListener('click', () => {
-        });
+        div.addEventListener('click', () => {});
+
         pilots.appendChild(div);
       }
 
@@ -65,6 +65,11 @@ const handleResponse = async (response, key) => {
           const div = document.createElement('div');
           div.id = filtered[pilot].name;
           div.innerHTML = `<p>Pilot: ${filtered[pilot].name}  Points: ${filtered[pilot].points}</p>`;
+
+          const img = document.createElement('img');
+          img.src = `/getImage?path=${filtered[pilot].image}`;
+
+          div.appendChild(img);
           tab.appendChild(div);
         }
       }
