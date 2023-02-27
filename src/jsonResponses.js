@@ -128,9 +128,15 @@ const getPilotInfo = (request, response, params) => {
   return respond(request, response, 200, responseJSON);
 };
 
+// Save Squadron function
+const saveSquadron = (request, response, body) => {
+  console.log(body);
+}
+
 module.exports = {
   getUser,
   createSquadron,
   getSquadronInfo,
   getPilotInfo,
+  saveSquadron,
 };

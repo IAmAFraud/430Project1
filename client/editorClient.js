@@ -1,59 +1,107 @@
 // Saved Client Data
 // Faction Ship Types
+const factionShips = {
+  'Rebel Alliance': ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
+    'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
+    'YT-1300', 'YT-2400', 'Z-95 Headhunter'],
+  'Galactic Empire': [],
+  'Scum and Villainy': []
+}
+
+/*
 const rebelShips = ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
   'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
   'YT-1300', 'YT-2400', 'Z-95 Headhunter'];
+*/
 
-// Squadron object
+// Client Fields
+let user;
+let faction;
 let squadronObj;
 let currentPoints = 0;
 
+// Save Squadron
+const saveSquadron = async() => {
+  console.log(squadronObj);
+
+  const response = await fetch('/saveSquadron', {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json',
+      'accept': 'application/json'
+    },
+    body: JSON.stringify(squadronObj)
+  });
+
+  handleReponse(response, 'save');
+};
+
 // Function for printing squadron's cards
 const printSquadron = () => {
-    const squadron = document.querySelector('#squadron');
-    squadron.innerHTML = '';
-    for(let ship in squadronObj['ships']){
-        const div = document.createElement('div');
-        div.id = ship.name;
-        div.innerHTML = `<p>Pilot: ${squadronObj['ships'][ship].name}  
-            Points: ${squadronObj['ships'][ship].points}</p>`;
+  document.querySelector('#stats').textContent = `Points: ${squadronObj.currentPoints}/${squadronObj.maxPoints}     
+  Faction: ${squadronObj.faction}`;
 
-        const img = document.createElement('img');
-        img.src = `/getImage?path=${squadronObj['ships'][ship].image}`;
+  const squadron = document.querySelector('#squadron');
+  squadron.innerHTML = '';
+  for(let ship in squadronObj['ships']){
+    for (let i = 0; i < squadronObj['ships'][ship]['count']; i++){
+      const div = document.createElement('div');
+      div.innerHTML = `<p>Pilot: ${squadronObj['ships'][ship].name}  
+          Points: ${squadronObj['ships'][ship].points}</p>`;
 
-        div.appendChild(img);
-        squadron.appendChild(div);
-    }
+      const img = document.createElement('img');
+      img.src = `/getImage?path=${squadronObj['ships'][ship].image}`;
+
+      const btn = document.createElement('button');
+      btn.textContent = 'Remove From Squadron';
+      btn.addEventListener('click', () => {
+        squadronObj.currentPoints -= squadronObj['ships'][ship].points;
+
+        if (squadronObj['ships'][ship].count > 1){
+          squadronObj['ships'][ship].count--;
+        } else {
+          delete squadronObj['ships'][ship];
+        }
+
+        printSquadron();
+      });
+
+      div.appendChild(btn);
+      div.appendChild(img);
+      squadron.appendChild(div);
+    } 
+  }
 };
 
 // Adds a ship to the local squadron data
 const addShip = (_name, _points, _image) => {
-    squadronObj['ships'][_name] = {
+    if (!squadronObj['ships'][_name]){
+      squadronObj['ships'][_name] = {
         name: _name,
         points: _points,
-        image: _image
+        image: _image,
+        count: 1
+      }
+    } else {
+      squadronObj['ships'][_name]['count']++;
     }
 
     squadronObj.currentPoints += _points;
-    document.querySelector('#stats').textContent = `Points: ${squadronObj.currentPoints}/${squadronObj.maxPoints}     
-        Faction: ${squadronObj.faction}`;
-
-    printSquadron();
+    return printSquadron();
 };
 
 const handleResponse = async (response, key) => {
   const { status } = response;
   switch (status) {
+    // Working
     case 200:
       break;
 
-    case 201:
-        break;
-
-    // Removing a Ship, Needs to Reprint the Ships
+    // Saving the squadron
     case 204:
       return;
 
+    // 
     case 400:
       break;
 
@@ -68,9 +116,8 @@ const handleResponse = async (response, key) => {
   if (status === 200) {
     if (key === 'squadron') {
         squadronObj = resJSON.content;
+        faction = squadronObj.faction;
         document.querySelector('#squadronName').textContent += squadronObj.name;
-        document.querySelector('#stats').textContent = `Points: ${squadronObj.currentPoints}/${squadronObj.maxPoints}     
-        Faction: ${squadronObj.faction}`;
 
         // Creates Tabs for Ships
         const pilots = document.querySelector('#pilots');
@@ -78,10 +125,10 @@ const handleResponse = async (response, key) => {
 
         // Info on how to create for in loops
         // https://www.microverse.org/blog/how-to-loop-through-the-array-of-json-objects-in-javascript
-        for (const ship in rebelShips) {
+        for (const ship in factionShips[faction]) {
             const div = document.createElement('div');
-            div.textContent = rebelShips[ship];
-            div.id = rebelShips[ship].replace(/ /g, '-');
+            div.textContent = factionShips[faction][ship];
+            div.id = factionShips[faction][ship].replace(/ /g, '-');
             div.addEventListener('click', () => {}); // Functionality for opening tabs of ships
 
             pilots.appendChild(div);
@@ -91,7 +138,7 @@ const handleResponse = async (response, key) => {
         printSquadron();
 
         // Loads in the faction's pilots if the squadron is loaded in
-        const pilotResponse = await fetch(`/getFactionData?faction=${resJSON.content.faction}`, {
+        const pilotResponse = await fetch(`/getFactionData?faction=${faction}`, {
             method: 'get',
             headers: {
             accept: 'application/json',
@@ -102,12 +149,12 @@ const handleResponse = async (response, key) => {
     } else if (key === 'pilots') {
       console.log(resJSON.content);
 
-      for (const ship in rebelShips) {
-        const filtered = resJSON.content.filter((x) => x.ship === rebelShips[ship]);
+      for (const ship in factionShips[faction]) {
+        const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);
 
         // Info on how to replace all spaces in a string
         // https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
-        const tab = document.querySelector(`#${rebelShips[ship].replace(/ /g, '-')}`);
+        const tab = document.querySelector(`#${factionShips[faction][ship].replace(/ /g, '-')}`);
         for (const pilot in filtered) {
             const div = document.createElement('div');
             div.id = filtered[pilot].name;
@@ -151,6 +198,9 @@ const init = async () => {
       accept: 'application/json',
     },
   });
+
+  document.querySelector('#save').addEventListener('click', saveSquadron);
+
   handleResponse(squadronResponse, 'squadron');
 };
 

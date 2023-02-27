@@ -25,6 +25,7 @@ const getStruct = {
 const postStruct = {
   '/getUser': jsonHandler.getUser,
   '/createSquadron': jsonHandler.createSquadron,
+  '/saveSquadron': jsonHandler.saveSquadron,
 };
 
 // Parse Body Function
@@ -43,9 +44,15 @@ const parseBody = (request, response, handlerFunction) => {
 
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
-    const bodyParams = query.parse(bodyString);
 
-    handlerFunction(request, response, bodyParams);
+    let parsedBody;
+    if (request['headers']['content-type'] === 'application/json'){
+      parsedBody = JSON.parse(bodyString);
+    } else {
+      parsedBody = query.parse(bodyString);
+    }
+
+    handlerFunction(request, response, parsedBody);
   });
 };
 

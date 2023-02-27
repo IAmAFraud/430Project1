@@ -67,6 +67,11 @@ const getFactionData = (faction) => {
   return filtered;
 };
 
+// Updates squadron data
+const updateSquadronData = (squadron) => {
+  
+};
+
 module.exports = {
   data,
   createNewUserData,
