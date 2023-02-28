@@ -47,7 +47,7 @@ const data = {
       name: 'Pirate Crew',
       currentPoints: 0,
       maxPoints: 75,
-      faction: 'Scum And Villainy',
+      faction: 'Scum and Villainy',
       ships: {},
     },
   },

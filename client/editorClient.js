@@ -4,17 +4,13 @@ const factionShips = {
   'Rebel Alliance': ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
     'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
     'YT-1300', 'YT-2400', 'Z-95 Headhunter'],
-  'Galactic Empire': ['Firespray-31', 'Gozanti-class Cruiser', 'Lambda-class Shuttle', 'Raider-Class Corvete', 'TIE Advanced', 
+  'Galactic Empire': ['Firespray-31', 'Gozanti-class Cruiser', 'Lambda-class Shuttle', 'Raider-class Corvete', 'TIE Advanced', 
     'TIE Aggressor', 'TIE Adv. Prototype', 'TIE Bomber', 'TIE Defender', 'TIE Fighter', 'TIE Interceptor', 'TIE Phantom',
     'TIE Punisher', 'TIE Striker', 'VT-49 Decimator'],
-  'Scum and Villainy': []
+  'Scum and Villainy': ['Aggressor', 'C-ROC Cruiser', 'Firespray-31', 'G-1A Starfighter', 'HWK-290', 'JumpMaster 5000', 
+    'Kihraxz Fighter', 'Lancer-class Pursuit Craft', 'M3-A Interceptor', 'Protectorate Starfighter', 'Quadjumper', 
+    'Scurrg H-6 Bomber', 'StarViper', 'Y-wing', 'YV-666', 'Z-95 Headhunter']
 }
-
-/*
-const rebelShips = ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
-  'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
-  'YT-1300', 'YT-2400', 'Z-95 Headhunter'];
-*/
 
 // Client Fields
 let user;
@@ -70,7 +66,6 @@ const printSquadron = () => {
 
       div.appendChild(btn);
       for (let url in squadronObj['ships'][ship]['image']){
-        console.log(url);
         const img = document.createElement('img');
         img.src = `/getImage?path=${squadronObj['ships'][ship]['image'][url]}`;
         div.appendChild(img);
@@ -136,7 +131,6 @@ const handleResponse = async (response, key) => {
             const div = document.createElement('div');
             div.textContent = factionShips[faction][ship];
             div.id = factionShips[faction][ship].replace(/ /g, '-');
-            console.log(div.id);
             div.addEventListener('click', () => {}); // Functionality for opening tabs of ships
 
             pilots.appendChild(div);
@@ -165,8 +159,6 @@ const handleResponse = async (response, key) => {
         
         // Special creation function for creating the CR90 Corvette
         if (faction === 'Rebel Alliance' && factionShips[faction][ship] === 'CR90 Corvette'){
-          console.log(factionShips[faction][ship]);
-
           // Creates the base data for the CR90 Corvette
           const div = document.createElement('div');
           div.id = 'CR90-Corvette';
@@ -195,11 +187,38 @@ const handleResponse = async (response, key) => {
           div.appendChild(img1);
           div.appendChild(img2);
           tab.appendChild(div);
-        } else if (faction === "Galactic Empire" && factionShips[faction][ship] === 'Raider-Class Corvete') {
+        } else if (faction === "Galactic Empire" && factionShips[faction][ship] === 'Raider-class Corvete') {
+          // Creates the base data for the Raider-class Corvete
+          const div = document.createElement('div');
+          div.id = 'Raider-class-Corvete';
+          const cost = resJSON.content[49].points + resJSON.content[50].points;
+          div.innerHTML = `<p>Ship: Raider-class Corvete   Points: ${cost}</p>`;
 
+          // Creates a button to add the card to the squadron
+          const button = document.createElement('button');
+          button.textContent = 'Add To Squadron';
+          button.addEventListener('click', () => {
+            // Checks if the card will bring the squadrons points above the maximum value
+            if (squadronObj.currentPoints + cost > squadronObj.maxPoints){
+              console.log('Cannot fit into squadron');
+              return;
+            }
+
+            // Adds the ship to the client's side
+            addShip('Raider-class Corvete', cost, [resJSON.content[49].image, resJSON.content[50].image]);
+          });
+
+          const img1 = document.createElement('img');
+          const img2 = document.createElement('img');
+          img1.src = `/getImage?path=${resJSON.content[49].image}`;
+          img2.src = `/getImage?path=${resJSON.content[50].image}`;
+
+          div.appendChild(button);
+          div.appendChild(img1);
+          div.appendChild(img2);
+          tab.appendChild(div);
         } else {
-          const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]); 
-          console.log(filtered);      
+          const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);      
           for (const pilot in filtered) {
             const div = document.createElement('div');
             div.id = filtered[pilot].name;
