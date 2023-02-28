@@ -4,7 +4,9 @@ const factionShips = {
   'Rebel Alliance': ['A-wing', 'ARC-170', 'Attack Shuttle', 'B-wing', 'CR90 Corvette', 'E-wing', 'GR-75 Medium Transport',
     'HWK-290', 'K-wing', 'Scurrg H-6 Bomber', 'TIE Fighter', 'U-wing', 'VCX-100', 'X-wing', 'Y-wing',
     'YT-1300', 'YT-2400', 'Z-95 Headhunter'],
-  'Galactic Empire': [],
+  'Galactic Empire': ['Firespray-31', 'Gozanti-class Cruiser', 'Lambda-class Shuttle', 'Raider-Class Corvete', 'TIE Advanced', 
+    'TIE Aggressor', 'TIE Adv. Prototype', 'TIE Bomber', 'TIE Defender', 'TIE Fighter', 'TIE Interceptor', 'TIE Phantom',
+    'TIE Punisher', 'TIE Striker', 'TIE/fo Fighter', 'TIE/sf Fighter', 'Upsilon-class Shuttle', 'VT-49 Decimator'],
   'Scum and Villainy': []
 }
 
@@ -52,9 +54,6 @@ const printSquadron = () => {
       div.innerHTML = `<p>Pilot: ${squadronObj['ships'][ship].name}  
           Points: ${squadronObj['ships'][ship].points}</p>`;
 
-      const img = document.createElement('img');
-      img.src = `/getImage?path=${squadronObj['ships'][ship].image}`;
-
       const btn = document.createElement('button');
       btn.textContent = 'Remove From Squadron';
       btn.addEventListener('click', () => {
@@ -70,7 +69,12 @@ const printSquadron = () => {
       });
 
       div.appendChild(btn);
-      div.appendChild(img);
+      for (let url in squadronObj['ships'][ship]['image']){
+        console.log(url);
+        const img = document.createElement('img');
+        img.src = `/getImage?path=${squadronObj['ships'][ship]['image'][url]}`;
+        div.appendChild(img);
+      }      
       squadron.appendChild(div);
     } 
   }
@@ -132,6 +136,7 @@ const handleResponse = async (response, key) => {
             const div = document.createElement('div');
             div.textContent = factionShips[faction][ship];
             div.id = factionShips[faction][ship].replace(/ /g, '-');
+            console.log(div.id);
             div.addEventListener('click', () => {}); // Functionality for opening tabs of ships
 
             pilots.appendChild(div);
@@ -153,12 +158,49 @@ const handleResponse = async (response, key) => {
       console.log(resJSON.content);
 
       for (const ship in factionShips[faction]) {
-        const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);
-
+        // Creates a tab reference
         // Info on how to replace all spaces in a string
         // https://stackoverflow.com/questions/3214886/javascript-replace-only-replaces-first-match
-        const tab = document.querySelector(`#${factionShips[faction][ship].replace(/ /g, '-')}`);
-        for (const pilot in filtered) {
+        const tab = document.getElementById(`${factionShips[faction][ship].replace(/ /g, '-')}`);
+        
+        // Special creation function for creating the CR90 Corvette
+        if (faction === 'Rebel Alliance' && factionShips[faction][ship] === 'CR90 Corvette'){
+          console.log(factionShips[faction][ship]);
+
+          // Creates the base data for the CR90 Corvette
+          const div = document.createElement('div');
+          div.id = 'CR90-Corvette';
+          div.innerHTML = '<p>Ship: CR90 Corvette   Points: 90</p>';
+
+          // Creates a button to add the card to the squadron
+          const button = document.createElement('button');
+          button.textContent = 'Add To Squadron';
+          button.addEventListener('click', () => {
+            // Checks if the card will bring the squadrons points above the maximum value
+            if (squadronObj.currentPoints + 90 > squadronObj.maxPoints){
+              console.log('Cannot fit into squadron');
+              return;
+            }
+
+            // Adds the ship to the client's side
+            addShip('CR90 Corvette', 90, [resJSON.content[35].image, resJSON.content[36].image]);
+          });
+
+          const img1 = document.createElement('img');
+          const img2 = document.createElement('img');
+          img1.src = `/getImage?path=${resJSON.content[35].image}`;
+          img2.src = `/getImage?path=${resJSON.content[36].image}`;
+
+          div.appendChild(button);
+          div.appendChild(img1);
+          div.appendChild(img2);
+          tab.appendChild(div);
+        } else if (faction === "Galactic Empire" && factionShips[faction][ship] === 'Raider-Class Corvete') {
+
+        } else {
+          const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]); 
+          console.log(filtered);      
+          for (const pilot in filtered) {
             const div = document.createElement('div');
             div.id = filtered[pilot].name;
             div.innerHTML = `<p>Pilot: ${filtered[pilot].name}  Points: ${filtered[pilot].points}</p>`;
@@ -166,7 +208,7 @@ const handleResponse = async (response, key) => {
             // Creates a button to add the card to the squadron
             const button = document.createElement('button');
             button.textContent = 'Add To Squadron';
-            button.addEventListener('click', async () => {
+            button.addEventListener('click', () => {
                 // Checks if the card will bring the squadrons points above the maximum value
                 if (squadronObj.currentPoints + filtered[pilot].points > squadronObj.maxPoints){
                     console.log('Cannot fit into squadron');
@@ -174,7 +216,7 @@ const handleResponse = async (response, key) => {
                 }
 
                 // Adds the ship to the client's side
-                addShip(filtered[pilot].name, filtered[pilot].points, filtered[pilot].image);
+                addShip(filtered[pilot].name, filtered[pilot].points, [filtered[pilot].image]);
             });
 
             const img = document.createElement('img');
@@ -183,6 +225,7 @@ const handleResponse = async (response, key) => {
             div.appendChild(button);
             div.appendChild(img);
             tab.appendChild(div);
+          }
         }
       }
     }
