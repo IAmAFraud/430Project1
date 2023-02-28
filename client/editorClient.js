@@ -6,7 +6,7 @@ const factionShips = {
     'YT-1300', 'YT-2400', 'Z-95 Headhunter'],
   'Galactic Empire': ['Firespray-31', 'Gozanti-class Cruiser', 'Lambda-class Shuttle', 'Raider-Class Corvete', 'TIE Advanced', 
     'TIE Aggressor', 'TIE Adv. Prototype', 'TIE Bomber', 'TIE Defender', 'TIE Fighter', 'TIE Interceptor', 'TIE Phantom',
-    'TIE Punisher', 'TIE Striker', 'TIE/fo Fighter', 'TIE/sf Fighter', 'Upsilon-class Shuttle', 'VT-49 Decimator'],
+    'TIE Punisher', 'TIE Striker', 'VT-49 Decimator'],
   'Scum and Villainy': []
 }
 
