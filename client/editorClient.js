@@ -22,7 +22,10 @@ let currentPoints = 0;
 
 // Save Squadron
 const saveSquadron = async() => {
-  console.log(squadronObj);
+  let saveObj = {
+    user: window.location.search.split('&')[0].split('=')[1],
+    squadron: squadronObj,
+  };
 
   const response = await fetch('/saveSquadron', {
     method: 'post',
@@ -30,10 +33,10 @@ const saveSquadron = async() => {
       'content-type': 'application/json',
       'accept': 'application/json'
     },
-    body: JSON.stringify(squadronObj)
+    body: JSON.stringify(saveObj)
   });
 
-  handleReponse(response, 'save');
+  handleResponse(response, 'save');
 };
 
 // Function for printing squadron's cards

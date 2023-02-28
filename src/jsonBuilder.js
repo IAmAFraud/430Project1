@@ -68,8 +68,8 @@ const getFactionData = (faction) => {
 };
 
 // Updates squadron data
-const updateSquadronData = (squadron) => {
-  
+const updateSquadronData = (user, squadron) => {
+  data[user][squadron.name] = squadron;
 };
 
 module.exports = {
@@ -77,4 +77,5 @@ module.exports = {
   createNewUserData,
   createSquadronData,
   getFactionData,
+  updateSquadronData,
 };
