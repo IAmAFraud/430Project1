@@ -42,6 +42,7 @@ const handleResponse = async (response, method, user) => {
     // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
     document.querySelector('#login').style.display = 'none';
     document.querySelector('#squadronCreation').style.display = 'block';
+    document.querySelector('#logout').style.display = 'block';
 
     // Loops through and prints out the squadrons the user has
     for (const x in resJSON.content) {
@@ -123,10 +124,21 @@ const createSquadron = async (squadronForm, loginForm) => {
   handleResponse(response, method, userName);
 };
 
+// Logs Out the User
+const logoutUser = (logoutButton) => {
+  document.querySelector('#squadronCreation').style.display = 'none';
+  document.querySelector('#login').style.display = 'block';
+
+  loginForm.querySelector('#userNameField').value = '';
+  document.querySelector('#content').innerHTML = '';
+};
+
+
 // Init Function
 const init = () => {
   const loginForm = document.querySelector('#loginForm');
   const squadronForm = document.querySelector('#squadronForm');
+  const logoutButton = document.querySelector('#logout');
 
   const login = (e) => {
     e.preventDefault();
@@ -136,12 +148,19 @@ const init = () => {
 
   const create = (e) => {
     e.preventDefault();
-    createSquadron(squadronForm, loginForm);
+    createSquadron(logoutButton, squadronForm, loginForm);
     return false;
   };
 
+  const logout = (e) => {
+    e.preventDefault();
+    logoutUser(logoutButton);
+    return false;
+  }
+
   loginForm.addEventListener('submit', login);
   squadronForm.addEventListener('submit', create);
+  logoutButton.addEventListener('click', logout);
 };
 
 window.onload = init;
