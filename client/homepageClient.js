@@ -57,11 +57,13 @@ const handleResponse = async (response, method, user) => {
       const name = document.createElement('h2');
       const points = document.createElement('p');
       const faction = document.createElement('p');
+      const img = document.createElement('img');
       const btn = document.createElement('button');
 
       name.textContent = `${resJSON.content[x].name}`;
       points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
       faction.textContent = `Faction: ${resJSON.content[x].faction}`;
+      img.src = `/getImage?path=factions/${resJSON.content[x].faction.replace(/ /g, '-').toLowerCase()}.png`;
 
       btn.textContent = 'Edit Squadron';
       btn.addEventListener('click', async () => {
@@ -76,6 +78,7 @@ const handleResponse = async (response, method, user) => {
       div.appendChild(name);
       div.appendChild(points);
       div.appendChild(faction);
+      div.appendChild(img);
       div.appendChild(btn);
 
       content.appendChild(div);
