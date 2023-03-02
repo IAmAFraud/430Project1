@@ -249,11 +249,14 @@ const handleResponse = async (response, key) => {
       }
     }
   } else if (status === 201) {
-    
+    console.log(resJSON.message);
   } else if (status === 400) {
     console.log(resJSON.message);
   }
 };
+
+// Get Function To Return to the Homepage
+
 
 const init = async () => {
   const squadronResponse = await fetch(`/getSquadronInfo${window.location.search}`, {
@@ -267,6 +270,10 @@ const init = async () => {
   document.querySelector('#save').addEventListener('click', saveSquadron);
 
   handleResponse(squadronResponse, 'squadron');
+
+  // Set up Return to Homepage Button
+  const returnBtn = document.querySelector('#home');
+  returnBtn.addEventListener('click', () => {window.location.href = '/'});
 };
 
 window.onload = init;
