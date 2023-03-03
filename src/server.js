@@ -22,6 +22,11 @@ const getStruct = {
   notFound: htmlHandler.getHomepageHTML,
 };
 
+const headStruct = {
+  '/getSquadronInfo': jsonHandler.getSquadronInfoMeta,
+  '/getFactionData': jsonHandler.getPilotInfoMeta,
+};
+
 const postStruct = {
   '/getUser': jsonHandler.getUser,
   '/createSquadron': jsonHandler.createSquadron,

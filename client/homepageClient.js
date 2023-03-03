@@ -60,15 +60,18 @@ const handleResponse = async (response, method, _user) => {
       const points = document.createElement('p');
       const faction = document.createElement('p');
       const imageWrapper = document.createElement('p');
-      const img = document.createElement('img');
+      const inputImg = document.createElement('input');
 
       name.textContent = `${resJSON.content[x].name}`;
       points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
       faction.textContent = `Faction: ${resJSON.content[x].faction}`;
 
       imageWrapper.textContent = 'Edit: ';
-      img.src = `/getImage?path=factions/${resJSON.content[x].faction.replace(/ /g, '-').toLowerCase()}.png`;
-      img.addEventListener('click', () => {
+      inputImg.type = 'image';
+      inputImg.src = `/getImage?path=factions/${resJSON.content[x].faction.replace(/ /g, '-').toLowerCase()}.png`;
+      inputImg.alt = 'Edit Squadron';
+      inputImg.title = 'Edit Squadron';
+      inputImg.addEventListener('click', () => {
         try {
           // Need to figure out how to pass username and squadron name to the next page
           window.location.href = `/editSquadron?user=${user}&name=${name.textContent}`;
@@ -81,7 +84,7 @@ const handleResponse = async (response, method, _user) => {
       div.appendChild(points);
       div.appendChild(faction);
       div.appendChild(imageWrapper);
-      div.appendChild(img);
+      div.appendChild(inputImg);
 
       content.appendChild(div);
     }

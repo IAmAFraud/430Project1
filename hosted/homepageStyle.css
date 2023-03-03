@@ -53,7 +53,7 @@ header p {
     margin-bottom: 12px;
 }
 
-img:hover {
+.squadron input:hover {
     opacity: 0.5;
     
 }

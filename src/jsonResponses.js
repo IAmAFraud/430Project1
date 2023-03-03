@@ -1,22 +1,3 @@
-/* Squadron Format
-{
-    'User': {
-        'Squadron Name': {
-            name: 'Squadron Name',
-            points: pointsMax,
-            faction: 'Faction',
-            ships: {
-                'Ship 1':{
-                    name: 'Ship 1',
-                    points: pointsCost,
-                    image: imageURL,
-                },
-            },
-        },
-    },
-
-}
-*/
 // requires
 const userData = require('./jsonBuilder.js');
 
@@ -69,8 +50,6 @@ const createSquadron = (request, response, body) => {
     return respond(request, response, 400, responseJSON);
   }
 
-  console.log(body);
-
   // Need to prevent overwriting data
   if (userData.data[body.userName][body.name]) {
     responseJSON.message = 'Name already exists, please change the name';
@@ -110,6 +89,21 @@ const getSquadronInfo = (request, response, params) => {
   return respond(request, response, 200, responseJSON);
 };
 
+// Get Squadron Info Meta
+const getSquadronInfoMeta = (request, response, params) => {
+  // If missing parameters, back out
+  if (!params.user || !params.name) {
+    return respondMeta(request, response, 400);
+  }
+
+  // If invalid user or squadron name, back out
+  if (!userData.data[params.user] || !userData.data[params.user][params.name]) {
+    return respondMeta(request, response, 404);
+  }
+
+  return respondMeta(request, response, 200);
+};
+
 // Returns the info on all of a faction's pilots
 const getPilotInfo = (request, response, params) => {
   const responseJSON = {};
@@ -119,21 +113,23 @@ const getPilotInfo = (request, response, params) => {
     return respond(request, response, 400, responseJSON);
   }
 
-  /*
-    console.log(params.faction);
-    if (params.faction !== 'Rebel Alliance'
-        || params.faction !== 'Galactic Empire'
-        || params.faction !== 'Scum and Villainy') {
-        responseJSON.message = 'Faction parameters is not correct';
-        responseJSON.id = 'invalidFactionParam';
-        return respond(request, response, 400, responseJSON);
-    }
-    */
-
+  if (params.faction !== 'Rebel Alliance'
+      && params.faction !== 'Galactic Empire'
+      && params.faction !== 'Scum and Villainy') {
+      responseJSON.message = 'Faction parameters is not correct';
+      responseJSON.id = 'invalidFactionParam';
+      return respond(request, response, 400, responseJSON);
+  }
+  
   const data = userData.getFactionData(params.faction);
   responseJSON.message = 'Sucessfully got faction data';
   responseJSON.content = data;
   return respond(request, response, 200, responseJSON);
+};
+
+// Returns the meta data of getting Pilot Info
+const getPilotInfoMeta = (request, response) => {
+  return respondMeta(request, response, 200);
 };
 
 // Save Squadron function
@@ -155,6 +151,8 @@ module.exports = {
   getUser,
   createSquadron,
   getSquadronInfo,
+  getSquadronInfoMeta,
   getPilotInfo,
+  getPilotInfoMeta,
   saveSquadron,
 };
