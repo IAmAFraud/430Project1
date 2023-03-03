@@ -1,3 +1,53 @@
+body {
+    background-color: black;
+    color: #FFE81F;
+}
+
+header {
+    text-align: center;
+}
+
+#login {
+    text-align: center;
+}
+
+#logout {
+    margin: auto;
+}
+
+#messages{
+    text-align: center;
+}
+
+#squadronCreation {
+    text-align: center;
+}
+
 #squadronCreation {
     display: none;
+}
+
+#content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.squadron {
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+    outline: 1px #FFFFFF solid;
+}
+
+.squadron h2 {
+    font-size: 1.6em;
+}
+
+.squadron p {
+    font-size: 1.2em;
+}
+
+img:hover {
+    opacity: 0.5;
+    
 }

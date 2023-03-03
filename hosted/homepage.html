@@ -9,16 +9,14 @@
         <script src="/homepageBundle.js"></script>
     </head>
     <body>
-        <header id="header">
+        <header id="homeHeader">
             <h1>X-Wing Squadron Builder</h1>
-        </header>
-        <section id="info">
             <p>
                 This is a squadron builder for 
                 the tabletop game X-Wing by Fantasy 
                 Flight Games.
             </p>
-        </section>
+        </header>
         <section id="login">
             <form id="loginForm" action="/getUser" method="post">
                 <label for="name">Name: </label>
@@ -47,6 +45,7 @@
             <button id="logout">Logout</button>
         </section>
         <section id="messages"></section>
+        <hr />
         <section id="content"></section>
     </body>
 </html>

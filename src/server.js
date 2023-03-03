@@ -46,7 +46,7 @@ const parseBody = (request, response, handlerFunction) => {
     const bodyString = Buffer.concat(body).toString();
 
     let parsedBody;
-    if (request['headers']['content-type'] === 'application/json'){
+    if (request.headers['content-type'] === 'application/json') {
       parsedBody = JSON.parse(bodyString);
     } else {
       parsedBody = query.parse(bodyString);

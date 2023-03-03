@@ -1,12 +1,15 @@
+// Variables
+let user = '';
+
 // Handles a response from the server
 const handleResponse = async (response, method, user) => {
   const content = document.querySelector('#content');
   const message = document.querySelector('#messages');
-  const status = response.status;
+  const { status } = response;
 
   switch (status) {
     case 200:
-      message.innerHTML = '<h1>Success</h1>';
+      message.innerHTML = '<h1>Welcome!</h1>';
       break;
 
     case 201:
@@ -40,6 +43,7 @@ const handleResponse = async (response, method, user) => {
     // Removes the login System, shows the Squadron Creator System
     // Info on how to hide elements
     // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+    user = document.querySelector('#userNameField').value;
     document.querySelector('#login').style.display = 'none';
     document.querySelector('#squadronCreation').style.display = 'block';
     document.querySelector('#logout').style.display = 'block';
@@ -52,18 +56,27 @@ const handleResponse = async (response, method, user) => {
       // https://stackoverflow.com/questions/195951/how-can-i-change-an-elements-class-with-javascript
       div.classList.add('squadron');
 
-      content.appendChild(document.createElement('hr'));
-
       const name = document.createElement('h2');
       const points = document.createElement('p');
       const faction = document.createElement('p');
+      const imageWrapper = document.createElement('p');
       const img = document.createElement('img');
       const btn = document.createElement('button');
 
       name.textContent = `${resJSON.content[x].name}`;
       points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
       faction.textContent = `Faction: ${resJSON.content[x].faction}`;
+
+      imageWrapper.textContent = 'Edit: ';
       img.src = `/getImage?path=factions/${resJSON.content[x].faction.replace(/ /g, '-').toLowerCase()}.png`;
+      img.addEventListener('click', () => {
+        try {
+          // Need to figure out how to pass username and squadron name to the next page
+          window.location.href = `/editSquadron?user=${user}&name=${name.textContent}`;
+        } catch (err) {
+          console.log(err);
+        }
+      });
 
       btn.textContent = 'Edit Squadron';
       btn.addEventListener('click', async () => {
@@ -78,8 +91,9 @@ const handleResponse = async (response, method, user) => {
       div.appendChild(name);
       div.appendChild(points);
       div.appendChild(faction);
+      div.appendChild(imageWrapper);
       div.appendChild(img);
-      div.appendChild(btn);
+      // div.appendChild(btn);
 
       content.appendChild(div);
     }
@@ -106,14 +120,13 @@ const getUser = async (loginForm) => {
 };
 
 // Function to Create a Squadron
-const createSquadron = async (squadronForm, loginForm) => {
+const createSquadron = async (squadronForm) => {
   const method = squadronForm.getAttribute('method');
-  const userName = loginForm.querySelector('#userNameField').value;
-  const name = squadronForm.querySelector('#squadronNameField').value;
-  const faction = squadronForm.querySelector('#factionSelect').value;
-  const points = squadronForm.querySelector('#pointsLimit').value;
+  const name = document.querySelector('#squadronNameField').value;
+  const faction = document.querySelector('#factionSelect').value;
+  const points = document.querySelector('#pointsLimit').value;
 
-  const formData = `userName=${userName}&name=${name}&faction=${faction}&points=${points}`;
+  const formData = `userName=${user}&name=${name}&faction=${faction}&points=${points}`;
 
   const response = await fetch('/createSquadron', {
     method,
@@ -124,18 +137,19 @@ const createSquadron = async (squadronForm, loginForm) => {
     body: formData,
   });
 
-  handleResponse(response, method, userName);
+  handleResponse(response, method, user);
 };
 
 // Logs Out the User
 const logoutUser = (logoutButton) => {
   document.querySelector('#squadronCreation').style.display = 'none';
   document.querySelector('#login').style.display = 'block';
+  document.querySelector('#messages').innerHTML = '<h1>Logged Out</h1>';
 
   loginForm.querySelector('#userNameField').value = '';
+  user = '';
   document.querySelector('#content').innerHTML = '';
 };
-
 
 // Init Function
 const init = () => {
@@ -151,7 +165,7 @@ const init = () => {
 
   const create = (e) => {
     e.preventDefault();
-    createSquadron(logoutButton, squadronForm, loginForm);
+    createSquadron(squadronForm);
     return false;
   };
 
@@ -159,7 +173,7 @@ const init = () => {
     e.preventDefault();
     logoutUser(logoutButton);
     return false;
-  }
+  };
 
   loginForm.addEventListener('submit', login);
   squadronForm.addEventListener('submit', create);

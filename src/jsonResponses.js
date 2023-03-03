@@ -28,9 +28,9 @@ const respond = (request, response, status, content) => {
 };
 
 const respondMeta = (request, response, status) => {
-  response.writeHead(status, {'Content-Type': 'application/json'});
+  response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
-}
+};
 
 // Get User Function
 const getUser = (request, response, body) => {
@@ -136,9 +136,8 @@ const getPilotInfo = (request, response, params) => {
 // Save Squadron function
 const saveSquadron = (request, response, body) => {
   const responseJSON = {};
-  console.log(body);
-  
-  if (!body.user || !body.squadron){
+
+  if (!body.user || !body.squadron) {
     responseJSON.message = 'Invalid Save Body';
     responseJSON.id = 'saveContentsInvalid';
     return respond(request, response, 400, responseJSON);
@@ -147,7 +146,7 @@ const saveSquadron = (request, response, body) => {
   userData.updateSquadronData(body.user, body.squadron);
 
   return respondMeta(request, response, 204);
-}
+};
 
 module.exports = {
   getUser,
