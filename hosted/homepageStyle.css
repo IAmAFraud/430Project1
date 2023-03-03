@@ -7,6 +7,10 @@ header {
     text-align: center;
 }
 
+header p {
+    font-size: 1.3em;
+}
+
 #login {
     text-align: center;
 }
@@ -36,7 +40,7 @@ header {
 .squadron {
     padding-left: 2.5em;
     padding-right: 2.5em;
-    outline: 1px #FFFFFF solid;
+    min-width: 20em;
 }
 
 .squadron h2 {
@@ -45,6 +49,8 @@ header {
 
 .squadron p {
     font-size: 1.2em;
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 
 img:hover {

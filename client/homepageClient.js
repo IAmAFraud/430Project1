@@ -2,7 +2,7 @@
 let user = '';
 
 // Handles a response from the server
-const handleResponse = async (response, method, user) => {
+const handleResponse = async (response, method, _user) => {
   const content = document.querySelector('#content');
   const message = document.querySelector('#messages');
   const { status } = response;
@@ -43,7 +43,7 @@ const handleResponse = async (response, method, user) => {
     // Removes the login System, shows the Squadron Creator System
     // Info on how to hide elements
     // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-    user = document.querySelector('#userNameField').value;
+    user = _user;
     document.querySelector('#login').style.display = 'none';
     document.querySelector('#squadronCreation').style.display = 'block';
     document.querySelector('#logout').style.display = 'block';

@@ -23,10 +23,11 @@ const userData = require('./jsonBuilder.js');
 // Response Function
 const respond = (request, response, status, content) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
-  response.write(JSON.stringify(content));
+  if (request.method !== 'HEAD') response.write(JSON.stringify(content));
   response.end();
 };
 
+// For update function
 const respondMeta = (request, response, status) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
@@ -67,6 +68,8 @@ const createSquadron = (request, response, body) => {
     responseJSON.id = 'addMissingParam';
     return respond(request, response, 400, responseJSON);
   }
+
+  console.log(body);
 
   // Need to prevent overwriting data
   if (userData.data[body.userName][body.name]) {

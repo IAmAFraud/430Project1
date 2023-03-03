@@ -12,7 +12,7 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 // Structs for GET, HEAD, and POST requests
 const getStruct = {
   '/': htmlHandler.getHomepageHTML,
-  '/homepageStyle.css': htmlHandler.getCSS,
+  '/homepageStyle.css': htmlHandler.getHomepageCSS,
   '/homepageBundle.js': htmlHandler.getHomepageJS,
   '/editSquadron': htmlHandler.getEditorHTML,
   '/editorBundle.js': htmlHandler.getEditorJS,
