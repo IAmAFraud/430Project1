@@ -61,7 +61,6 @@ const handleResponse = async (response, method, _user) => {
       const faction = document.createElement('p');
       const imageWrapper = document.createElement('p');
       const img = document.createElement('img');
-      const btn = document.createElement('button');
 
       name.textContent = `${resJSON.content[x].name}`;
       points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
@@ -78,22 +77,11 @@ const handleResponse = async (response, method, _user) => {
         }
       });
 
-      btn.textContent = 'Edit Squadron';
-      btn.addEventListener('click', async () => {
-        try {
-          // Need to figure out how to pass username and squadron name to the next page
-          window.location.href = `/editSquadron?user=${user}&name=${name.textContent}`;
-        } catch (err) {
-          console.log(err);
-        }
-      });
-
       div.appendChild(name);
       div.appendChild(points);
       div.appendChild(faction);
       div.appendChild(imageWrapper);
       div.appendChild(img);
-      // div.appendChild(btn);
 
       content.appendChild(div);
     }
