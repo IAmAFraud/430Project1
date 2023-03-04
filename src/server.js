@@ -105,7 +105,7 @@ const onRequest = (request, response) => {
 
   switch (request.method) {
     case 'HEAD':
-      handleHead(reqeust, response, parsedUrl);
+      handleHead(request, response, parsedUrl);
       break;
 
     case 'GET':

@@ -116,11 +116,11 @@ const getPilotInfo = (request, response, params) => {
   if (params.faction !== 'Rebel Alliance'
       && params.faction !== 'Galactic Empire'
       && params.faction !== 'Scum and Villainy') {
-      responseJSON.message = 'Faction parameters is not correct';
-      responseJSON.id = 'invalidFactionParam';
-      return respond(request, response, 400, responseJSON);
+    responseJSON.message = 'Faction parameters is not correct';
+    responseJSON.id = 'invalidFactionParam';
+    return respond(request, response, 400, responseJSON);
   }
-  
+
   const data = userData.getFactionData(params.faction);
   responseJSON.message = 'Sucessfully got faction data';
   responseJSON.content = data;
@@ -128,9 +128,7 @@ const getPilotInfo = (request, response, params) => {
 };
 
 // Returns the meta data of getting Pilot Info
-const getPilotInfoMeta = (request, response) => {
-  return respondMeta(request, response, 200);
-};
+const getPilotInfoMeta = (request, response) => respondMeta(request, response, 200);
 
 // Save Squadron function
 const saveSquadron = (request, response, body) => {

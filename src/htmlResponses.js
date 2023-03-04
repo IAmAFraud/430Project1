@@ -14,10 +14,10 @@ const notFoundJS = fs.readFileSync(`${__dirname}/../hosted/notFoundBundle.js`);
 
 // Respond Function
 const respond = (request, response, status, content, contentType) => {
-  response.writeHead(status, {'Content-Type': contentType});
+  response.writeHead(status, { 'Content-Type': contentType });
   response.write(content);
   response.end();
-}
+};
 
 // Get HTML function
 const getHomepageHTML = (request, response) => {
@@ -42,7 +42,7 @@ const getHomepageCSS = (request, response) => {
 // Get Editor CSS File
 const getEditorCSS = (request, response) => {
   respond(request, response, 200, editorStyle, 'text/css');
-}
+};
 
 // Get Not Found CSS File
 const getNotFoundCSS = (request, response) => {
