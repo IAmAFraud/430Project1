@@ -17,6 +17,7 @@ let user;
 let faction;
 let squadronObj;
 const currentPoints = 0;
+let message;
 
 // Save Squadron
 const saveSquadron = async () => {
@@ -64,11 +65,15 @@ const printSquadron = () => {
       btn.addEventListener('click', () => {
         squadronObj.currentPoints -= squadronObj.ships[ship].points;
 
+        // Decrements the count for that ship, or removes it from the obj entirely
         if (squadronObj.ships[ship].count > 1) {
           squadronObj.ships[ship].count--;
         } else {
           delete squadronObj.ships[ship];
         }
+
+        // Updates the messages
+        message.textContent = 'Ship Removed';
 
         printSquadron();
       });
@@ -89,6 +94,10 @@ const printSquadron = () => {
 
 // Adds a ship to the local squadron data
 const addShip = (_name, _points, _image) => {
+  // Updates the message
+  message.textContent = 'Ship Added';
+
+  // Adds the ship to the SquadronObj, incrementing the count if necessary
   if (!squadronObj.ships[_name]) {
     squadronObj.ships[_name] = {
       name: _name,
@@ -106,29 +115,12 @@ const addShip = (_name, _points, _image) => {
 
 const handleResponse = async (response, key) => {
   const { status } = response;
-  switch (status) {
-    // Working
-    case 200:
-      break;
 
-    // Saving the squadron
-    case 204:
-      return;
-
-    //
-    case 400:
-      break;
-
-    case 404:
-      break;
-
-    default:
-      break;
-  }
-
-  const resJSON = await response.json();
   if (status === 200) {
+    const resJSON = await response.json();
+
     if (key === 'squadron') {
+      // Sets up the squadronObj
       squadronObj = resJSON.content;
       faction = squadronObj.faction;
       document.querySelector('#squadronName').textContent += squadronObj.name;
@@ -177,8 +169,6 @@ const handleResponse = async (response, key) => {
 
       handleResponse(pilotResponse, 'pilots');
     } else if (key === 'pilots') {
-      console.log(resJSON.content);
-
       for (const ship in factionShips[faction]) {
         // Creates a tab reference
         // Info on how to replace all spaces in a string
@@ -203,7 +193,7 @@ const handleResponse = async (response, key) => {
           button.addEventListener('click', () => {
             // Checks if the card will bring the squadrons points above the maximum value
             if (squadronObj.currentPoints + 90 > squadronObj.maxPoints) {
-              console.log('Cannot fit into squadron');
+              message.textContent = 'Cannot Add Ship, Exceeds Max Squadron Value';
               return;
             }
 
@@ -246,7 +236,7 @@ const handleResponse = async (response, key) => {
           button.addEventListener('click', () => {
             // Checks if the card will bring the squadrons points above the maximum value
             if (squadronObj.currentPoints + cost > squadronObj.maxPoints) {
-              console.log('Cannot fit into squadron');
+              message.textContent = 'Cannot Add Ship, Exceeds Max Squadron Value';
               return;
             }
 
@@ -288,7 +278,7 @@ const handleResponse = async (response, key) => {
             button.addEventListener('click', () => {
               // Checks if the card will bring the squadrons points above the maximum value
               if (squadronObj.currentPoints + filtered[pilot].points > squadronObj.maxPoints) {
-                console.log('Cannot fit into squadron');
+                message.textContent = 'Cannot Add Ship, Exceeds Max Squadron Value';
                 return;
               }
 
@@ -315,16 +305,24 @@ const handleResponse = async (response, key) => {
         }
       }
     }
-  } else if (status === 201) {
-    console.log(resJSON.message);
+  } else if (status === 204) {
+    message.textContent = 'Squadron Saved';
   } else if (status === 400) {
-    console.log(resJSON.message);
+    const resJSON = await response.json();
+    message.textContent = `${resJSON.message}`;
+  } else if (status === 404) {
+    const resJSON = await response.json();
+    message.textContent = `${resJSON.message}`; 
   }
 };
 
 // Get Function To Return to the Homepage
 
 const init = async () => {
+  // Gets the message element
+  message = document.getElementById('message');
+
+  // Gets the necessary data for the squadron
   const squadronResponse = await fetch(`/getSquadronInfo${window.location.search}`, {
     method: 'get',
     headers: {
@@ -333,13 +331,14 @@ const init = async () => {
     },
   });
 
-  document.querySelector('#save').addEventListener('click', saveSquadron);
-
   handleResponse(squadronResponse, 'squadron');
 
   // Set up Return to Homepage Button
   const returnBtn = document.querySelector('#home');
   returnBtn.addEventListener('click', () => { window.location.href = '/'; });
+
+  // Set up Save Squadron Button
+  document.querySelector('#save').addEventListener('click', saveSquadron);
 };
 
 window.onload = init;
