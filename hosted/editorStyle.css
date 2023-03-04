@@ -1,3 +1,9 @@
+@media screen and (min-width: 480px){
+    .bigShip img {
+        display: block;
+    }
+}
+
 body {
     background-color: black;
     color: #FFE81F;
@@ -8,9 +14,9 @@ header {
 }
 
 img {
-    display: block;
+    display: inline-block;
     width: 14em;
-    margin-left: auto;
+    margin-left: 0.45em;
     margin-right: auto;
     padding-bottom: 0.3em;
 }
@@ -21,7 +27,7 @@ img {
 
 #squadron{
     display: flex;
-    display: wrap;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
@@ -48,6 +54,7 @@ img {
 }
 
 .ship button{
+    display: block;
     width: 14em;
     margin-left: 2em;
     margin-right: 2em;
@@ -56,4 +63,33 @@ img {
 .ship p{
     font-size: 1em;
     text-align: center; 
+}
+
+.bigShip {
+    font-size: 1.0em;
+    margin-top: 6px;
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-bottom: 2em;
+}
+
+.bigShip button{
+    width: 14em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+.bigShip p{
+    font-size: 1em;
+    text-align: center; 
+}
+
+.bigShip button {
+    display: block;
+    margin-left: 10em;
+    margin-right: 10em;
+}
+
+.bigShip img {
+    display: inline-block;
 }
