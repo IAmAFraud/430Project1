@@ -129,9 +129,22 @@ const handleResponse = async (response, key) => {
       // https://www.microverse.org/blog/how-to-loop-through-the-array-of-json-objects-in-javascript
       for (const ship in factionShips[faction]) {
         const div = document.createElement('div');
-        div.textContent = factionShips[faction][ship];
+        div.textContent = factionShips[faction][ship] + ' V';
+        div.classList.add('tab');
         div.id = factionShips[faction][ship].replace(/ /g, '-');
-        div.addEventListener('click', () => {}); // Functionality for opening tabs of ships
+        div.addEventListener('click', () => {
+          let ships = div.getElementsByClassName('ship');
+
+          for (let ship in ships){
+            console.log(ship);
+
+            if (ships[ship].hidden){
+              ships[ship].hidden = false;
+            } else {
+              ships[ship].hidden = true;
+            }
+          }
+        }); // Functionality for opening tabs of ships
 
         pilots.appendChild(div);
       }
@@ -183,9 +196,16 @@ const handleResponse = async (response, key) => {
           img1.src = `/getImage?path=${resJSON.content[35].image}`;
           img2.src = `/getImage?path=${resJSON.content[36].image}`;
 
+          // Added elements to div
           div.appendChild(button);
           div.appendChild(img1);
           div.appendChild(img2);
+
+          // Adding class and hidden status
+          div.classList.add('ship');
+          div.hidden = true;
+
+          // Add to the tab
           tab.appendChild(div);
         } else if (faction === 'Galactic Empire' && factionShips[faction][ship] === 'Raider-class Corvete') {
           // Creates the base data for the Raider-class Corvete
@@ -213,9 +233,16 @@ const handleResponse = async (response, key) => {
           img1.src = `/getImage?path=${resJSON.content[49].image}`;
           img2.src = `/getImage?path=${resJSON.content[50].image}`;
 
+          // Adds children to the div
           div.appendChild(button);
           div.appendChild(img1);
           div.appendChild(img2);
+
+          // Adds classes and hidden status
+          div.classList.add('ship');
+          div.hidden = true;
+
+          // Appends to the tab
           tab.appendChild(div);
         } else {
           const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);
@@ -241,8 +268,15 @@ const handleResponse = async (response, key) => {
             const img = document.createElement('img');
             img.src = `/getImage?path=${filtered[pilot].image}`;
 
+            // Add elements to the div
             div.appendChild(button);
             div.appendChild(img);
+
+            // Add class and hidden status
+            div.classList.add('ship');
+            div.hidden = true;
+
+            // Add div to the tab
             tab.appendChild(div);
           }
         }

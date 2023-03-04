@@ -6,7 +6,7 @@ const homepage = fs.readFileSync(`${__dirname}/../hosted/homepage.html`);
 const editor = fs.readFileSync(`${__dirname}/../hosted/editor.html`);
 const notFound = fs.readFileSync(`${__dirname}/../hosted/notFound.html`);
 const homepageStyle = fs.readFileSync(`${__dirname}/../hosted/homepageStyle.css`);
-// editor style
+const editorStyle = fs.readFileSync(`${__dirname}/../hosted/editorStyle.css`);
 const notFoundStyle = fs.readFileSync(`${__dirname}/../hosted/notFoundStyle.css`);
 const homepageJS = fs.readFileSync(`${__dirname}/../hosted/homepageBundle.js`);
 const editorJS = fs.readFileSync(`${__dirname}/../hosted/editorBundle.js`);
@@ -31,17 +31,18 @@ const getEditorHTML = (request, response) => {
 
 // Get Not Found HTML
 const getNotFoundHTML = (request, response) => {
-  respond(request, response, 200, notFound, 'text/html');
+  respond(request, response, 404, notFound, 'text/html');
 };
 
 // Get Homepage CSS File
 const getHomepageCSS = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/css' });
-  response.write(homepageStyle);
-  response.end();
+  respond(request, response, 200, homepageStyle, 'text/css');
 };
 
 // Get Editor CSS File
+const getEditorCSS = (request, response) => {
+  respond(request, response, 200, editorStyle, 'text/css');
+}
 
 // Get Not Found CSS File
 const getNotFoundCSS = (request, response) => {
@@ -73,6 +74,7 @@ module.exports = {
   getEditorHTML,
   getNotFoundHTML,
   getHomepageCSS,
+  getEditorCSS,
   getNotFoundCSS,
   getHomepageJS,
   getEditorJS,
