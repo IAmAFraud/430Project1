@@ -135,7 +135,8 @@ const handleResponse = async (response, key) => {
         const div = document.createElement('div');
         const p = document.createElement('p');
 
-        p.textContent = factionShips[faction][ship] + ' V';
+        p.textContent = factionShips[faction][ship] + ' \u2193';
+        p.classList.add('title');
         div.classList.add('tab');
         div.id = factionShips[faction][ship].replace(/ /g, '-');
         p.addEventListener('click', () => {
@@ -207,7 +208,6 @@ const handleResponse = async (response, key) => {
           img2.src = `/getImage?path=${resJSON.content[36].image}`;
           img1.alt = 'Ship Card';
           img2.alt = 'Ship Card';
-          img1.classList.add('firstImg');
 
           // Added elements to div
           div.appendChild(p1);
@@ -226,9 +226,14 @@ const handleResponse = async (response, key) => {
         } else if (faction === 'Galactic Empire' && factionShips[faction][ship] === 'Raider-class Corvete') {
           // Creates the base data for the Raider-class Corvete
           const div = document.createElement('div');
+          const p1 = document.createElement('p');
+          const p2 = document.createElement('p');
+
+          cost = resJSON.content[49].points + resJSON.content[50].points;
+          p1.textContent = 'Ship: CR90 Corvette';
+          p2.textContent = `Points: ${cost}`;
+
           div.id = 'Raider-class-Corvete';
-          const cost = resJSON.content[49].points + resJSON.content[50].points;
-          div.innerHTML = `<p>Ship: Raider-class Corvete   Points: ${cost}</p>`;
 
           // Creates a button to add the card to the squadron
           const button = document.createElement('button');
@@ -248,14 +253,19 @@ const handleResponse = async (response, key) => {
           const img2 = document.createElement('img');
           img1.src = `/getImage?path=${resJSON.content[49].image}`;
           img2.src = `/getImage?path=${resJSON.content[50].image}`;
+          img1.alt = 'Ship Card';
+          img2.alt = 'Ship Card';
 
           // Adds children to the div
-          div.appendChild(button);
+          div.appendChild(p1);
+          div.appendChild(p2);
           div.appendChild(img1);
           div.appendChild(img2);
+          div.appendChild(button);
 
           // Adds classes and hidden status
           div.classList.add('ship');
+          div.classList.add('bigShip');
           div.hidden = true;
 
           // Appends to the tab

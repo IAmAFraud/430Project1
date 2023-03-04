@@ -7,6 +7,10 @@ header {
     text-align: center;
 }
 
+button:hover {
+    opacity: 0.5;
+}
+
 header p {
     font-size: 1.3em;
 }
@@ -55,5 +59,4 @@ header p {
 
 .squadron input:hover {
     opacity: 0.5;
-    
 }
