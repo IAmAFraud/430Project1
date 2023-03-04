@@ -5,6 +5,7 @@ module.exports = {
     entry: {
         homepage: './client/homepageClient.js',
         editor: './client/editorClient.js',
+        notFound: './client/notFoundClient.js',
     },
     mode: 'development',
     output: {

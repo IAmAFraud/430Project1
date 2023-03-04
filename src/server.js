@@ -16,10 +16,12 @@ const getStruct = {
   '/homepageBundle.js': htmlHandler.getHomepageJS,
   '/editSquadron': htmlHandler.getEditorHTML,
   '/editorBundle.js': htmlHandler.getEditorJS,
+  '/notFoundStyle.css': htmlHandler.getNotFoundCSS,
+  '/notFoundBundle.js': htmlHandler.getNotFoundJS,
   '/getSquadronInfo': jsonHandler.getSquadronInfo,
   '/getFactionData': jsonHandler.getPilotInfo,
   '/getImage': imgHandler.getImage,
-  notFound: htmlHandler.getHomepageHTML,
+  notFound: htmlHandler.getNotFoundHTML,
 };
 
 const headStruct = {
