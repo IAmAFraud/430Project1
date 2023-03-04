@@ -76,6 +76,18 @@ const handleGet = (request, response, parsedUrl) => {
   }
 };
 
+// Handles Get Requests
+const handleHead = (request, response, parsedUrl) => {
+  const func = headStruct[parsedUrl.pathname];
+  const params = query.parse(parsedUrl.query);
+
+  if (func) {
+    func(request, response, params);
+  } else {
+    getStruct.notFound(request, response);
+  }
+};
+
 // Handles Post Requests
 const handlePost = (request, response, parsedUrl) => {
   const func = postStruct[parsedUrl.pathname];
@@ -93,6 +105,7 @@ const onRequest = (request, response) => {
 
   switch (request.method) {
     case 'HEAD':
+      handleHead(reqeust, response, parsedUrl);
       break;
 
     case 'GET':
