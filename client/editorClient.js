@@ -47,8 +47,13 @@ const printSquadron = () => {
   for (const ship in squadronObj.ships) {
     for (let i = 0; i < squadronObj.ships[ship].count; i++) {
       const div = document.createElement('div');
-      div.innerHTML = `<p>Pilot: ${squadronObj.ships[ship].name}  
-          Points: ${squadronObj.ships[ship].points}</p>`;
+      const p1 = document.createElement('p');
+      const p2 = document.createElement('p');
+
+      div.classList.add('ship');
+
+      p1.textContent = `Pilot: ${squadronObj.ships[ship].name}`;
+      p2.textContent = `Points: ${squadronObj.ships[ship].points}`
 
       const btn = document.createElement('button');
       btn.textContent = 'Remove From Squadron';
@@ -64,12 +69,15 @@ const printSquadron = () => {
         printSquadron();
       });
 
-      div.appendChild(btn);
+      div.appendChild(p1);
+      div.appendChild(p2)
       for (const url in squadronObj.ships[ship].image) {
         const img = document.createElement('img');
         img.src = `/getImage?path=${squadronObj.ships[ship].image[url]}`;
         div.appendChild(img);
       }
+      div.appendChild(btn);
+
       squadron.appendChild(div);
     }
   }
@@ -129,10 +137,12 @@ const handleResponse = async (response, key) => {
       // https://www.microverse.org/blog/how-to-loop-through-the-array-of-json-objects-in-javascript
       for (const ship in factionShips[faction]) {
         const div = document.createElement('div');
-        div.textContent = factionShips[faction][ship] + ' V';
+        const p = document.createElement('p');
+
+        p.textContent = factionShips[faction][ship] + ' V';
         div.classList.add('tab');
         div.id = factionShips[faction][ship].replace(/ /g, '-');
-        div.addEventListener('click', () => {
+        p.addEventListener('click', () => {
           let ships = div.getElementsByClassName('ship');
 
           for (let ship in ships){
@@ -146,6 +156,7 @@ const handleResponse = async (response, key) => {
           }
         }); // Functionality for opening tabs of ships
 
+        div.appendChild(p);
         pilots.appendChild(div);
       }
 
@@ -248,8 +259,13 @@ const handleResponse = async (response, key) => {
           const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);
           for (const pilot in filtered) {
             const div = document.createElement('div');
+            const p1 = document.createElement('p');
+            const p2 = document.createElement('p');
+
+            p1.textContent = `Pilot: ${filtered[pilot].name}`;
+            p2.textContent = `Points: ${filtered[pilot].points}`;
+
             div.id = filtered[pilot].name;
-            div.innerHTML = `<p>Pilot: ${filtered[pilot].name}  Points: ${filtered[pilot].points}</p>`;
 
             // Creates a button to add the card to the squadron
             const button = document.createElement('button');
@@ -269,8 +285,10 @@ const handleResponse = async (response, key) => {
             img.src = `/getImage?path=${filtered[pilot].image}`;
 
             // Add elements to the div
-            div.appendChild(button);
+            div.appendChild(p1);
+            div.appendChild(p2);
             div.appendChild(img);
+            div.appendChild(button);
 
             // Add class and hidden status
             div.classList.add('ship');
