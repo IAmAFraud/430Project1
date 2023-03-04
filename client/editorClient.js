@@ -135,7 +135,7 @@ const handleResponse = async (response, key) => {
         const div = document.createElement('div');
         const p = document.createElement('p');
 
-        p.textContent = factionShips[faction][ship] + ' \u2193';
+        p.textContent = factionShips[faction][ship] + ' \\/';
         p.classList.add('title');
         div.classList.add('tab');
         div.id = factionShips[faction][ship].replace(/ /g, '-');
