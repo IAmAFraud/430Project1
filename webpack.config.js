@@ -7,7 +7,7 @@ module.exports = {
         editor: './client/editorClient.js',
         notFound: './client/notFoundClient.js',
     },
-    mode: 'development',
+    mode: 'production',
     output: {
         path: path.resolve(__dirname, 'hosted'),
         filename: '[name]Bundle.js',
