@@ -19,6 +19,7 @@ const getImage = (request, response, params) => {
   }
 
   // Checks to see if the file exists
+  // Check found here: https://flaviocopes.com/how-to-check-if-file-exists-node/
   if (!fs.existsSync(`${__dirname}/../node_modules/xwing-data/images/${params.path}`)) {
     return respond(request, response, 404, missingImg);
   }

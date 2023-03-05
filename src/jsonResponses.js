@@ -8,7 +8,7 @@ const respond = (request, response, status, content) => {
   response.end();
 };
 
-// For update function
+// Respond meta function
 const respondMeta = (request, response, status) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
@@ -107,12 +107,15 @@ const getSquadronInfoMeta = (request, response, params) => {
 // Returns the info on all of a faction's pilots
 const getPilotInfo = (request, response, params) => {
   const responseJSON = {};
+
+  // Checks if the faction parameter is present
   if (!params.faction) {
     responseJSON.message = 'Need a faction parameter';
     responseJSON.id = 'missingFactionParam';
     return respond(request, response, 400, responseJSON);
   }
 
+  // Checks to make sure the faction is valid faction
   if (params.faction !== 'Rebel Alliance'
       && params.faction !== 'Galactic Empire'
       && params.faction !== 'Scum and Villainy') {
@@ -128,23 +131,39 @@ const getPilotInfo = (request, response, params) => {
 };
 
 // Returns the meta data of getting Pilot Info
-const getPilotInfoMeta = (request, response) => respondMeta(request, response, 200);
+const getPilotInfoMeta = (request, response, params) => {
+  // Checks if the faction parameter is present
+  if (!params.faction) {
+    return respondMeta(request, response, 400);
+  }
+
+  // Checks to make sure the faction is valid faction
+  if (params.faction !== 'Rebel Alliance'
+      && params.faction !== 'Galactic Empire'
+      && params.faction !== 'Scum and Villainy') {
+    return respondMeta(request, response, 400);
+  }
+
+  return respondMeta(request, response, 200);
+};
 
 // Save Squadron function
 const saveSquadron = (request, response, body) => {
   const responseJSON = {};
 
+  // Checks if the body has the necessary data
   if (!body.user || !body.squadron) {
     responseJSON.message = 'Invalid Save Body';
     responseJSON.id = 'saveContentsInvalid';
     return respond(request, response, 400, responseJSON);
   }
 
+  // Updates the squadron database on the server
   userData.updateSquadronData(body.user, body.squadron);
-
   return respondMeta(request, response, 204);
 };
 
+// Exports
 module.exports = {
   getUser,
   createSquadron,

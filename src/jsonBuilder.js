@@ -22,9 +22,8 @@
 // Requires the pilots data
 const fs = require('fs');
 
+// Loads in the json of all the pilots data
 const pilotData = JSON.parse(fs.readFileSync(`${__dirname}/../node_modules/xwing-data/data/pilots.js`));
-
-// const filtered = data.filter(x => x.faction === 'Rebel Alliance')
 
 // The base data for storing squadrons
 const data = {

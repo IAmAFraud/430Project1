@@ -53,6 +53,8 @@ const parseBody = (request, response, handlerFunction) => {
   request.on('end', () => {
     const bodyString = Buffer.concat(body).toString();
 
+    // parses the body depending on what the content-type is
+    // Example found here: https://nodejs.org/api/http.html#requestgetheadername
     let parsedBody;
     if (request.headers['content-type'] === 'application/json') {
       parsedBody = JSON.parse(bodyString);

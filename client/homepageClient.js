@@ -7,6 +7,7 @@ const handleResponse = async (response, method, _user) => {
   const message = document.querySelector('#messages');
   const { status } = response;
 
+  // Based on the status code, updates the message
   switch (status) {
     case 200:
       message.innerHTML = '<h1>Welcome!</h1>';
@@ -17,7 +18,7 @@ const handleResponse = async (response, method, _user) => {
       break;
 
     case 400:
-      message.innerHTML = '<h1>Bad Request: Check Console<h1>';
+      message.innerHTML = '<h1>Bad Request:';
       break;
 
     case 404:
@@ -32,8 +33,9 @@ const handleResponse = async (response, method, _user) => {
   // Gets the JSON response
   const resJSON = await response.json();
 
+  // For a 400 error code
   if (status === 400) {
-    console.log(resJSON.message);
+    message.innerHTML += ` ${resJSON.message}</h1>`;
   }
 
   if (status === 200 || status === 201) {
@@ -56,36 +58,40 @@ const handleResponse = async (response, method, _user) => {
       // https://stackoverflow.com/questions/195951/how-can-i-change-an-elements-class-with-javascript
       div.classList.add('squadron');
 
+      // Creates all the elements
       const name = document.createElement('h2');
       const points = document.createElement('p');
       const faction = document.createElement('p');
       const imageWrapper = document.createElement('p');
       const inputImg = document.createElement('input');
 
+      // Defines the text content of the name, points, and faction
       name.textContent = `${resJSON.content[x].name}`;
       points.textContent = `Points Max: ${resJSON.content[x].maxPoints}`;
       faction.textContent = `Faction: ${resJSON.content[x].faction}`;
 
+      // Creates a button out of the faction image
       imageWrapper.textContent = 'Edit: ';
       inputImg.type = 'image';
       inputImg.src = `/getImage?path=factions/${resJSON.content[x].faction.replace(/ /g, '-').toLowerCase()}.png`;
       inputImg.alt = 'Edit Squadron';
-      inputImg.title = 'Edit Squadron';
+      inputImg.title = 'Edit Squadron'; // Why I did this: https://www.computerhope.com/issues/ch001076.htm
       inputImg.addEventListener('click', () => {
         try {
-          // Need to figure out how to pass username and squadron name to the next page
           window.location.href = `/editSquadron?user=${user}&name=${name.textContent}`;
         } catch (err) {
           console.log(err);
         }
       });
 
+      // Add all the elements to the div
       div.appendChild(name);
       div.appendChild(points);
       div.appendChild(faction);
       div.appendChild(imageWrapper);
       div.appendChild(inputImg);
 
+      // At the div to the content section
       content.appendChild(div);
     }
   }
@@ -93,11 +99,14 @@ const handleResponse = async (response, method, _user) => {
 
 // Function to Get the User
 const getUser = async (loginForm) => {
+  // Gets the data from the loginForm
   const method = loginForm.getAttribute('method');
   const name = loginForm.querySelector('#userNameField').value;
 
+  // Creates the body of the request
   const formData = `name=${name}`;
 
+  // Makes the request
   const response = await fetch('/getUser', {
     method,
     headers: {
@@ -112,13 +121,16 @@ const getUser = async (loginForm) => {
 
 // Function to Create a Squadron
 const createSquadron = async (squadronForm) => {
+  // Gets all the necessary information from the squadron creation form
   const method = squadronForm.getAttribute('method');
   const name = document.querySelector('#squadronNameField').value;
   const faction = document.querySelector('#factionSelect').value;
   const points = document.querySelector('#pointsLimit').value;
 
+  // Creates the body of the post request
   const formData = `userName=${user}&name=${name}&faction=${faction}&points=${points}`;
 
+  // Makes the post request
   const response = await fetch('/createSquadron', {
     method,
     headers: {
@@ -148,24 +160,28 @@ const init = () => {
   const squadronForm = document.querySelector('#squadronForm');
   const logoutButton = document.querySelector('#logout');
 
+  // Logs in the user
   const login = (e) => {
     e.preventDefault();
     getUser(loginForm);
     return false;
   };
 
+  // Creates a squadron
   const create = (e) => {
     e.preventDefault();
     createSquadron(squadronForm);
     return false;
   };
 
+  // Logs out the user
   const logout = (e) => {
     e.preventDefault();
     logoutUser(logoutButton);
     return false;
   };
 
+  // Connect the listeners
   loginForm.addEventListener('submit', login);
   squadronForm.addEventListener('submit', create);
   logoutButton.addEventListener('click', logout);

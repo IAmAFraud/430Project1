@@ -15,7 +15,7 @@
   \**********************************/
 /***/ (() => {
 
-eval("// Init Function\r\nconst init = () => {\r\n    const returnBtn = document.querySelector('#home');\r\n\r\n    returnBtn.addEventListener('click', () => {\r\n        window.location.href = '/';\r\n    });\r\n}\r\n\r\n\r\nwindow.onload = init;\n\n//# sourceURL=webpack://430project1/./client/notFoundClient.js?");
+eval("// Init Function, sets up the button to return to the homepage\r\nconst init = () => {\r\n    const returnBtn = document.querySelector('#home');\r\n\r\n    returnBtn.addEventListener('click', () => {\r\n        window.location.href = '/';\r\n    });\r\n}\r\n\r\nwindow.onload = init;\n\n//# sourceURL=webpack://430project1/./client/notFoundClient.js?");
 
 /***/ })
 

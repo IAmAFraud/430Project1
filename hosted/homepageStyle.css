@@ -1,3 +1,4 @@
+/*Yellow Color Found Here: https://www.schemecolor.com/star-wars-logo-colors.php*/
 body {
     background-color: black;
     color: #FFE81F;
@@ -7,6 +8,7 @@ header {
     text-align: center;
 }
 
+/*Graying out an Element:  https://stackoverflow.com/questions/286275/gray-out-image-with-css*/
 button:hover {
     opacity: 0.5;
 }
@@ -35,6 +37,7 @@ header p {
     display: none;
 }
 
+/*Using flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/*/
 #content {
     display: flex;
     flex-wrap: wrap;

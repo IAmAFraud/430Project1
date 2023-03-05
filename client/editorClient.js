@@ -21,11 +21,13 @@ let message;
 
 // Save Squadron
 const saveSquadron = async () => {
+  // Creates an json object to be saved
   const saveObj = {
     user: window.location.search.split('&')[0].split('=')[1],
     squadron: squadronObj,
   };
 
+  // Posts the saveObj back to the server
   const response = await fetch('/saveSquadron', {
     method: 'post',
     headers: {
@@ -40,28 +42,34 @@ const saveSquadron = async () => {
 
 // Function for printing squadron's cards
 const printSquadron = () => {
+  // Updates the stats for the squadron
   document.querySelector('#stats').textContent = `Points: ${squadronObj.currentPoints}/${squadronObj.maxPoints}     
   Faction: ${squadronObj.faction}`;
 
+  // Loops through, printing the information for all cards present in the squadron
   const squadron = document.querySelector('#squadron');
   squadron.innerHTML = '';
   for (const ship in squadronObj.ships) {
     for (let i = 0; i < squadronObj.ships[ship].count; i++) {
+      // Creates the div Wrapper
       const div = document.createElement('div');
-      const p1 = document.createElement('p');
-      const p2 = document.createElement('p');
-
       div.classList.add('ship');
 
+      // Creates the data paragraphs
+      const p1 = document.createElement('p');
+      const p2 = document.createElement('p');
       p1.textContent = `Pilot: ${squadronObj.ships[ship].name}`;
       p2.textContent = `Points: ${squadronObj.ships[ship].points}`
 
+      // Creates the remove button
       const btn = document.createElement('button');
       btn.textContent = 'Remove From Squadron';
+      // If the ship being printed has multiple images, changes its class
       if (squadronObj.ships[ship].image.length > 1){
         div.classList.add('bigShip');
         div.classList.remove('ship');
       }
+      // When the button is clicked, remove the ship from the obj and the points total
       btn.addEventListener('click', () => {
         squadronObj.currentPoints -= squadronObj.ships[ship].points;
 
@@ -78,6 +86,7 @@ const printSquadron = () => {
         printSquadron();
       });
 
+      // Append all of the elements to the div wrapper
       div.appendChild(p1);
       div.appendChild(p2)
       for (const url in squadronObj.ships[ship].image) {
@@ -87,6 +96,7 @@ const printSquadron = () => {
       }
       div.appendChild(btn);
 
+      // Add it to the squadron section of the webpage
       squadron.appendChild(div);
     }
   }
@@ -110,15 +120,18 @@ const addShip = (_name, _points, _image) => {
   }
 
   squadronObj.currentPoints += _points;
-  return printSquadron();
+  printSquadron();
 };
 
+// Handles all response cases
 const handleResponse = async (response, key) => {
   const { status } = response;
+
 
   if (status === 200) {
     const resJSON = await response.json();
 
+    // If the response comes from loading in squadron's data
     if (key === 'squadron') {
       // Sets up the squadronObj
       squadronObj = resJSON.content;
@@ -169,7 +182,9 @@ const handleResponse = async (response, key) => {
       });
 
       handleResponse(pilotResponse, 'pilots');
+    // If the response comes from loading in the pilot data 
     } else if (key === 'pilots') {
+      // Loops through each ship type in the current factions ships array above
       for (const ship in factionShips[faction]) {
         // Creates a tab reference
         // Info on how to replace all spaces in a string
@@ -178,15 +193,16 @@ const handleResponse = async (response, key) => {
 
         // Special creation function for creating the CR90 Corvette
         if (faction === 'Rebel Alliance' && factionShips[faction][ship] === 'CR90 Corvette') {
-          // Creates the base data for the CR90 Corvette
+          // Creates the div wrapper
           const div = document.createElement('div');
+          div.id = 'CR90-Corvette';
+
+          // Creates the data paragraphs
           const p1 = document.createElement('p');
           const p2 = document.createElement('p');
-
+          let cost = resJSON.content[35].points + resJSON.content[36].points;
           p1.textContent = 'Ship: CR90 Corvette';
-          p2.textContent = 'Points: 90';
-
-          div.id = 'CR90-Corvette';
+          p2.textContent = `Points: ${cost}`;
 
           // Creates a button to add the card to the squadron
           const button = document.createElement('button');
@@ -202,6 +218,7 @@ const handleResponse = async (response, key) => {
             addShip('CR90 Corvette', 90, [resJSON.content[35].image, resJSON.content[36].image]);
           });
 
+          // Sets up the two images for the ship
           const img1 = document.createElement('img');
           const img2 = document.createElement('img');
           img1.src = `/getImage?path=${resJSON.content[35].image}`;
@@ -223,17 +240,18 @@ const handleResponse = async (response, key) => {
 
           // Add to the tab
           tab.appendChild(div);
+        // Special creation function for creating the Raider-class Corvete
         } else if (faction === 'Galactic Empire' && factionShips[faction][ship] === 'Raider-class Corvete') {
-          // Creates the base data for the Raider-class Corvete
+          // Creates the div wrapper
           const div = document.createElement('div');
+          div.id = 'Raider-class-Corvete';
+
+          // Sets up the data paragraphs
           const p1 = document.createElement('p');
           const p2 = document.createElement('p');
-
-          cost = resJSON.content[49].points + resJSON.content[50].points;
+          let cost = resJSON.content[49].points + resJSON.content[50].points;
           p1.textContent = 'Ship: CR90 Corvette';
           p2.textContent = `Points: ${cost}`;
-
-          div.id = 'Raider-class-Corvete';
 
           // Creates a button to add the card to the squadron
           const button = document.createElement('button');
@@ -249,6 +267,7 @@ const handleResponse = async (response, key) => {
             addShip('Raider-class Corvete', cost, [resJSON.content[49].image, resJSON.content[50].image]);
           });
 
+          // Sets up the images
           const img1 = document.createElement('img');
           const img2 = document.createElement('img');
           img1.src = `/getImage?path=${resJSON.content[49].image}`;
@@ -270,17 +289,20 @@ const handleResponse = async (response, key) => {
 
           // Appends to the tab
           tab.appendChild(div);
+        // For every other ship
         } else {
+          // Gets a filtered array from the response of all ships of the current type
           const filtered = resJSON.content.filter((x) => x.ship === factionShips[faction][ship]);
           for (const pilot in filtered) {
+            // Creates the div wrapper
             const div = document.createElement('div');
+            div.id = filtered[pilot].name;
+
+            // Creates the data paragraphs
             const p1 = document.createElement('p');
             const p2 = document.createElement('p');
-
             p1.textContent = `Pilot: ${filtered[pilot].name}`;
             p2.textContent = `Points: ${filtered[pilot].points}`;
-
-            div.id = filtered[pilot].name;
 
             // Creates a button to add the card to the squadron
             const button = document.createElement('button');
@@ -296,6 +318,7 @@ const handleResponse = async (response, key) => {
               addShip(filtered[pilot].name, filtered[pilot].points, [filtered[pilot].image]);
             });
 
+            // Creates the ship image
             const img = document.createElement('img');
             img.src = `/getImage?path=${filtered[pilot].image}`;
 
@@ -315,6 +338,7 @@ const handleResponse = async (response, key) => {
         }
       }
     }
+  // If not a 200 code, update the message based on the status code
   } else if (status === 204) {
     message.textContent = 'Squadron Saved';
   } else if (status === 400) {
@@ -326,8 +350,7 @@ const handleResponse = async (response, key) => {
   }
 };
 
-// Get Function To Return to the Homepage
-
+// Init function
 const init = async () => {
   // Gets the message element
   message = document.getElementById('message');

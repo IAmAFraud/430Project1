@@ -1,3 +1,4 @@
+/*Yellow Color Found Here: https://www.schemecolor.com/star-wars-logo-colors.php*/
 body{
     background-color: black;
     color: #FFE81F;
@@ -20,6 +21,7 @@ button:hover {
     opacity: 0.5;
 }
 
+/*Sticky Example Taken from Here:  https://www.designcise.com/web/tutorial/how-to-fix-issues-with-css-position-sticky-not-working*/
 #messageContainer {
     background-color: #4d4d4d;
     position: sticky;
@@ -36,8 +38,10 @@ button:hover {
 
 #info {
     text-align: center;
+    font-size: 1.3em;
 }
 
+/*Using flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/*/
 #squadron{
     display: flex;
     flex-wrap: wrap;
@@ -50,6 +54,7 @@ button:hover {
     justify-content: center;
 }
 
+/*Graying out an Element:  https://stackoverflow.com/questions/286275/gray-out-image-with-css*/
 .title:hover {
     opacity: 0.5;
 }
@@ -78,7 +83,7 @@ button:hover {
 }
 
 .ship p{
-    font-size: 1em;
+    font-size: 1.2em;
     text-align: center; 
 }
 
